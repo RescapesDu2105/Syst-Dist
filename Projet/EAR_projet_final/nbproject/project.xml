@@ -16,15 +16,19 @@
                     <path-in-war>/</path-in-war>
                 </library>
                 <library>
-                    <file>${reference.ApplicationPATIENT.j2ee-module-car}</file>
-                    <path-in-war>/</path-in-war>
-                </library>
-                <library>
                     <file>${reference.ApplicationMEDECIN.j2ee-module-car}</file>
                     <path-in-war>/</path-in-war>
                 </library>
                 <library>
                     <file>${reference.ApplicationLABORANTIN.j2ee-module-car}</file>
+                    <path-in-war>/</path-in-war>
+                </library>
+                <library>
+                    <file>${reference.ApplicationPATIENT.j2ee-module-car}</file>
+                    <path-in-war>/</path-in-war>
+                </library>
+                <library>
+                    <file>${reference.ApplicationPATIENT.j2ee-module-car}</file>
                     <path-in-war>/</path-in-war>
                 </library>
             </web-module-additional-libraries>
