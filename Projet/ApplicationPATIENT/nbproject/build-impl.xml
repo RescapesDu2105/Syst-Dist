@@ -19,7 +19,7 @@
         - cleanup
 
         -->
-<project xmlns:carproject="http://www.netbeans.org/ns/car-project/1" basedir=".." default="default" name="WS_Result-impl">
+<project xmlns:carproject="http://www.netbeans.org/ns/car-project/1" basedir=".." default="default" name="ApplicationPATIENT-impl">
     <import file="ant-deploy.xml"/>
     <fail message="Please build using Ant 1.7.1 or higher.">
         <condition>
@@ -400,7 +400,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
                     </fileset>
                 </union>
                 <taskdef classname="org.testng.TestNGAntTask" classpath="${run.test.classpath}" name="testng"/>
-                <testng classfilesetref="test.set" failureProperty="tests.failed" listeners="org.testng.reporters.VerboseReporter" methods="${testng.methods.arg}" mode="${testng.mode}" outputdir="${build.test.results.dir}" suitename="WS_Result" testname="TestNG tests" workingDir="${work.dir}">
+                <testng classfilesetref="test.set" failureProperty="tests.failed" listeners="org.testng.reporters.VerboseReporter" methods="${testng.methods.arg}" mode="${testng.mode}" outputdir="${build.test.results.dir}" suitename="ApplicationPATIENT" testname="TestNG tests" workingDir="${work.dir}">
                     <xmlfileset dir="${build.test.classes.dir}" includes="@{testincludes}"/>
                     <propertyset>
                         <propertyref prefix="test-sys-prop."/>
@@ -546,7 +546,7 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
                 <condition else="-testclass @{testClass}" property="test.class.or.method" value="-methods @{testClass}.@{testMethod}">
                     <isset property="test.method"/>
                 </condition>
-                <condition else="-suitename WS_Result -testname @{testClass} ${test.class.or.method}" property="testng.cmd.args" value="@{testClass}">
+                <condition else="-suitename ApplicationPATIENT -testname @{testClass} ${test.class.or.method}" property="testng.cmd.args" value="@{testClass}">
                     <matches pattern=".*\.xml" string="@{testClass}"/>
                 </condition>
                 <delete dir="${build.test.results.dir}" quiet="true"/>
@@ -758,7 +758,7 @@ exists or setup the property manually. For example like this:
             -->
     <target name="-check-main-class">
         <fail>
-                    Main class must be set. Go to WS_Result project properties -&gt; Run and set the main class there.
+                    Main class must be set. Go to ApplicationPATIENT project properties -&gt; Run and set the main class there.
                     <condition>
                 <not>
                     <or>
@@ -770,10 +770,12 @@ exists or setup the property manually. For example like this:
         </fail>
     </target>
     <target depends="init" if="no.dist.ear.dir" name="-deps-module-jar" unless="no.deps">
-        <ant antfile="${project.JavaLibraryDBAccess}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.WS_Result}/build.xml" inheritall="false" target="dist"/>
     </target>
     <target depends="init" if="dist.ear.dir" name="-deps-ear-jar" unless="no.deps">
-        <ant antfile="${project.JavaLibraryDBAccess}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.WS_Result}/build.xml" inheritall="false" target="dist-ear">
+            <property location="${build.dir}" name="dist.ear.dir"/>
+        </ant>
     </target>
     <target depends="init, -check-main-class, -deps-module-jar, -deps-ear-jar" name="deps-jar"/>
     <target depends="init,deps-jar" name="-pre-pre-compile">
@@ -784,22 +786,16 @@ exists or setup the property manually. For example like this:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="compile" if="is.server.weblogic" name="library-inclusion-in-archive">
-        <basename file="${libs.eclipselink.classpath}" property="manifest.libs.eclipselink.classpath"/>
-        <basename file="${libs.MySQLDriver.classpath}" property="manifest.libs.MySQLDriver.classpath"/>
-        <basename file="${reference.JavaLibraryDBAccess.jar}" property="manifest.reference.JavaLibraryDBAccess.jar"/>
+        <basename file="${reference.WS_Result.dist}" property="manifest.reference.WS_Result.dist"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Extension-List" value="jar-1 jar-2 jar-3 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.libs.eclipselink.classpath}"/>
-            <attribute name="jar-2-Extension-Name" value="${manifest.libs.MySQLDriver.classpath}"/>
-            <attribute name="jar-3-Extension-Name" value="${manifest.reference.JavaLibraryDBAccess.jar}"/>
+            <attribute name="Extension-List" value="jar-1 "/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.reference.WS_Result.dist}"/>
         </manifest>
     </target>
     <target depends="compile" if="dist.ear.dir" name="library-inclusion-in-manifest">
-        <copyfiles files="${libs.eclipselink.classpath}" manifestproperty="manifest.libs.eclipselink.classpath" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${libs.MySQLDriver.classpath}" manifestproperty="manifest.libs.MySQLDriver.classpath" todir="${dist.ear.dir}/lib"/>
-        <copyfiles files="${reference.JavaLibraryDBAccess.jar}" manifestproperty="manifest.reference.JavaLibraryDBAccess.jar" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.WS_Result.dist}" manifestproperty="manifest.reference.WS_Result.dist" todir="${dist.ear.dir}"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.libs.eclipselink.classpath} lib/${manifest.libs.eclipselink.classpath} ${manifest.libs.MySQLDriver.classpath} lib/${manifest.libs.MySQLDriver.classpath} ${manifest.reference.JavaLibraryDBAccess.jar} lib/${manifest.reference.JavaLibraryDBAccess.jar} "/>
+            <attribute name="Class-Path" value="${manifest.reference.WS_Result.dist} "/>
         </manifest>
     </target>
     <target name="-copy-meta-inf">
@@ -954,17 +950,17 @@ exists or setup the property manually. For example like this:
         </macrodef>
     </target>
     <target if="j2ee.appclient.mainclass.args" name="-as-retrieve-option-workaround" unless="j2ee.clientName">
-        <property name="client.jar" value="${dist.dir}/WS_ResultClient.jar"/>
+        <property name="client.jar" value="${dist.dir}/ApplicationPATIENTClient.jar"/>
         <sleep seconds="3"/>
-        <copy failonerror="false" file="${wa.copy.client.jar.from}/WS_Result/WS_ResultClient.jar" todir="${dist.dir}"/>
+        <copy failonerror="false" file="${wa.copy.client.jar.from}/ApplicationPATIENT/ApplicationPATIENTClient.jar" todir="${dist.dir}"/>
         <copy failonerror="false" flatten="true" todir="${dist.dir}/">
-            <fileset dir="${wa.copy.client.jar.from}/WS_Result" includes="**/WS_ResultClient.jar"/>
+            <fileset dir="${wa.copy.client.jar.from}/ApplicationPATIENT" includes="**/ApplicationPATIENTClient.jar"/>
         </copy>
-        <copy flatten="true" todir="${dist.dir}/WS_ResultClient">
-            <fileset dir="${wa.copy.client.jar.from}/WS_Result" includes="**/*.*ar"/>
+        <copy flatten="true" todir="${dist.dir}/ApplicationPATIENTClient">
+            <fileset dir="${wa.copy.client.jar.from}/ApplicationPATIENT" includes="**/*.*ar"/>
         </copy>
-        <copy failonerror="false" flatten="false" todir="${dist.dir}/WS_ResultClient">
-            <fileset dir="${dist.dir}/gfdeploy/WS_Result" includes="**/*.jar"/>
+        <copy failonerror="false" flatten="false" todir="${dist.dir}/ApplicationPATIENTClient">
+            <fileset dir="${dist.dir}/gfdeploy/ApplicationPATIENT" includes="**/*.jar"/>
         </copy>
     </target>
     <target name="pre-run-deploy">
@@ -1303,7 +1299,7 @@ exists or setup the property manually. For example like this:
                 ===============
             -->
     <target depends="init" name="deps-clean" unless="no.deps">
-        <ant antfile="${project.JavaLibraryDBAccess}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.WS_Result}/build.xml" inheritall="false" target="clean"/>
     </target>
     <target depends="init" name="-do-clean">
         <delete dir="${build.dir}"/>
