@@ -3,10 +3,10 @@
     <type>org.netbeans.modules.j2ee.ejbjarproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
-            <name>Patient-ejb</name>
+            <name>Analyses-ejb</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
-            <included-library dirs="200">reference.JavaLibraryEntities.jar</included-library>
             <included-library dirs="200">reference.JavaLibraryInterfacesRemote.jar</included-library>
+            <included-library dirs="200">reference.JavaLibraryEntities.jar</included-library>
             <source-roots>
                 <root id="src.dir" name="Source Packages"/>
             </source-roots>
