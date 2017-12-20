@@ -14,17 +14,8 @@
             <included-library dirs="200">libs.eclipselink.classpath</included-library>
             <included-library dirs="200">libs.MySQLDriver.classpath</included-library>
             <included-library dirs="200">reference.JavaLibraryInterfacesRemote.jar</included-library>
-            <included-library dirs="200">reference.JavaLibraryEntities.jar</included-library>
         </data>
         <references xmlns="http://www.netbeans.org/ns/ant-project-references/1">
-            <reference>
-                <foreign-project>JavaLibraryEntities</foreign-project>
-                <artifact-type>jar</artifact-type>
-                <script>build.xml</script>
-                <target>jar</target>
-                <clean-target>clean</clean-target>
-                <id>jar</id>
-            </reference>
             <reference>
                 <foreign-project>JavaLibraryInterfacesRemote</foreign-project>
                 <artifact-type>jar</artifact-type>

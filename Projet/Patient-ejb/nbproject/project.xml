@@ -5,7 +5,6 @@
         <data xmlns="http://www.netbeans.org/ns/j2ee-ejbjarproject/3">
             <name>Patient-ejb</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
-            <included-library dirs="200">reference.JavaLibraryEntities.jar</included-library>
             <included-library dirs="200">reference.JavaLibraryInterfacesRemote.jar</included-library>
             <source-roots>
                 <root id="src.dir" name="Source Packages"/>
@@ -15,14 +14,6 @@
             </test-roots>
         </data>
         <references xmlns="http://www.netbeans.org/ns/ant-project-references/1">
-            <reference>
-                <foreign-project>JavaLibraryEntities</foreign-project>
-                <artifact-type>jar</artifact-type>
-                <script>build.xml</script>
-                <target>jar</target>
-                <clean-target>clean</clean-target>
-                <id>jar</id>
-            </reference>
             <reference>
                 <foreign-project>JavaLibraryInterfacesRemote</foreign-project>
                 <artifact-type>jar</artifact-type>
