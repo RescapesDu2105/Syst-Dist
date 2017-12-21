@@ -793,21 +793,21 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="compile" if="is.server.weblogic" name="library-inclusion-in-archive">
         <basename file="${reference.Analyses-ejb.dist}" property="manifest.reference.Analyses-ejb.dist"/>
-        <basename file="${reference.Patient-ejb.dist}" property="manifest.reference.Patient-ejb.dist"/>
         <basename file="${reference.JavaLibraryApp.jar}" property="manifest.reference.JavaLibraryApp.jar"/>
+        <basename file="${reference.Patient-ejb.dist}" property="manifest.reference.Patient-ejb.dist"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
             <attribute name="Extension-List" value="jar-1 jar-2 jar-3 "/>
             <attribute name="jar-1-Extension-Name" value="${manifest.reference.Analyses-ejb.dist}"/>
-            <attribute name="jar-2-Extension-Name" value="${manifest.reference.Patient-ejb.dist}"/>
-            <attribute name="jar-3-Extension-Name" value="${manifest.reference.JavaLibraryApp.jar}"/>
+            <attribute name="jar-2-Extension-Name" value="${manifest.reference.JavaLibraryApp.jar}"/>
+            <attribute name="jar-3-Extension-Name" value="${manifest.reference.Patient-ejb.dist}"/>
         </manifest>
     </target>
     <target depends="compile" if="dist.ear.dir" name="library-inclusion-in-manifest">
         <copyfiles files="${reference.Analyses-ejb.dist}" manifestproperty="manifest.reference.Analyses-ejb.dist" todir="${dist.ear.dir}"/>
-        <copyfiles files="${reference.Patient-ejb.dist}" manifestproperty="manifest.reference.Patient-ejb.dist" todir="${dist.ear.dir}"/>
         <copyfiles files="${reference.JavaLibraryApp.jar}" manifestproperty="manifest.reference.JavaLibraryApp.jar" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.Patient-ejb.dist}" manifestproperty="manifest.reference.Patient-ejb.dist" todir="${dist.ear.dir}"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.reference.Analyses-ejb.dist} ${manifest.reference.Patient-ejb.dist} ${manifest.reference.JavaLibraryApp.jar} lib/${manifest.reference.JavaLibraryApp.jar} "/>
+            <attribute name="Class-Path" value="${manifest.reference.Analyses-ejb.dist} ${manifest.reference.JavaLibraryApp.jar} lib/${manifest.reference.JavaLibraryApp.jar} ${manifest.reference.Patient-ejb.dist} "/>
         </manifest>
     </target>
     <target name="-copy-meta-inf">

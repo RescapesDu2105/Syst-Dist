@@ -37,3 +37,5 @@ CREATE TABLE `bd_systdist`.`logs` (
 
 
 INSERT INTO bd_systdist.medecin VALUES('1', 'Dimartino', 'Philippe', 'philippedimartino');
+COMMIT;
+SELECT * FROM bd_systdist.medecin;

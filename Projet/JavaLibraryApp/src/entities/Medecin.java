@@ -6,7 +6,7 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +15,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -29,9 +31,9 @@ import javax.xml.bind.annotation.XmlTransient;
 {
     @NamedQuery(name = "Medecin.findAll", query = "SELECT m FROM Medecin m")
     , @NamedQuery(name = "Medecin.findByIdMedecin", query = "SELECT m FROM Medecin m WHERE m.idMedecin = :idMedecin")
+    , @NamedQuery(name = "Medecin.findByLogin", query = "SELECT m FROM Medecin m WHERE m.login = :login")
     , @NamedQuery(name = "Medecin.findByNom", query = "SELECT m FROM Medecin m WHERE m.nom = :nom")
     , @NamedQuery(name = "Medecin.findByPrenom", query = "SELECT m FROM Medecin m WHERE m.prenom = :prenom")
-    , @NamedQuery(name = "Medecin.findByLogin", query = "SELECT m FROM Medecin m WHERE m.login = :login")
 })
 public class Medecin implements Serializable
 {
@@ -39,16 +41,20 @@ public class Medecin implements Serializable
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @NotNull
     @Column(name = "idMedecin")
     private Integer idMedecin;
-    @Column(name = "Nom")
-    private String nom;
-    @Column(name = "Prenom")
-    private String prenom;
+    @Size(max = 255)
     @Column(name = "Login")
     private String login;
+    @Size(max = 255)
+    @Column(name = "Nom")
+    private String nom;
+    @Size(max = 255)
+    @Column(name = "Prenom")
+    private String prenom;
     @OneToMany(mappedBy = "refMedecin")
-    private List<Demande> demandeList;
+    private Collection<Demande> demandeCollection;
 
     public Medecin()
     {
@@ -67,6 +73,16 @@ public class Medecin implements Serializable
     public void setIdMedecin(Integer idMedecin)
     {
         this.idMedecin = idMedecin;
+    }
+
+    public String getLogin()
+    {
+        return login;
+    }
+
+    public void setLogin(String login)
+    {
+        this.login = login;
     }
 
     public String getNom()
@@ -89,25 +105,15 @@ public class Medecin implements Serializable
         this.prenom = prenom;
     }
 
-    public String getLogin()
-    {
-        return login;
-    }
-
-    public void setLogin(String login)
-    {
-        this.login = login;
-    }
-
     @XmlTransient
-    public List<Demande> getDemandeList()
+    public Collection<Demande> getDemandeCollection()
     {
-        return demandeList;
+        return demandeCollection;
     }
 
-    public void setDemandeList(List<Demande> demandeList)
+    public void setDemandeCollection(Collection<Demande> demandeCollection)
     {
-        this.demandeList = demandeList;
+        this.demandeCollection = demandeCollection;
     }
 
     @Override
