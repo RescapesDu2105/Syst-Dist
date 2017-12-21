@@ -11,54 +11,70 @@ import java.security.Principal;
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
-import javax.annotation.security.RunAs;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceUnit;
 
 /**
  *
  * @author Philippe
  */
 @Stateless
-//@RunAs("group")
-@DeclareRoles({"Medecins", "Laborantins"})
+@DeclareRoles("Medecins")//, "Laborantins", "asadmin"})
 public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
 {
-    @PersistenceUnit(unitName = "JavaLibraryAppPU")
+    //@PersistenceUnit(unitName = "JavaLibraryAppPU")
     @Resource SessionContext sessionContext; 
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("Analyses-ejbPU");
-    private final EntityManager em = emf.createEntityManager();
+    //private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("Analyses-ejbPU");
+    //private final EntityManager em = emf.createEntityManager();
 
     @Override
-    @RolesAllowed({"Medecins", "Laborantins"})
+    @RolesAllowed("Medecins")//, "Laborantins", "asadmin"})
     public Principal Authentification()
+    //public Medecin Authentification()
     {
         //log("Connexion de : " + sessionContext.getCallerPrincipal().getName())
         try
         {
+            System.out.println("Authentification");
             System.out.println("ctx = " + sessionContext);
             System.out.println("caller = " + sessionContext.getCallerPrincipal());
+            
+            if(sessionContext.isCallerInRole("Medecins"))
+            {
+                Principal callerPrincipal = sessionContext.getCallerPrincipal();
+                if(callerPrincipal.getName().equals("philippedimartino"))
+                {
+                    return sessionContext.getCallerPrincipal();
+                }
+                
+                //Medecin m = getMedecinByLogin(sessionContext.getCallerPrincipal().getName());
+                
+                //return m;
+            }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
         
-        return sessionContext.getCallerPrincipal();
+        return null;
     }
 
     @Override
     public Medecin getMedecinByLogin(String login)
     {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
         Medecin m = null;
         try
         {
-            m = (Medecin) em.createNamedQuery("Medecin.findByLogin").setParameter("login", login).getSingleResult();
+            System.out.println("Salut");
+            m = em.createNamedQuery("Medecin.findByLogin", Medecin.class).setParameter("login", login).getSingleResult();
+            System.out.println("Medecin = " + m);
         }
         catch(Exception e)
         {

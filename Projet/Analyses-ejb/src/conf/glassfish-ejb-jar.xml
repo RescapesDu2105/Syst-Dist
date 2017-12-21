@@ -4,7 +4,7 @@
     <security-role-mapping>
         <role-name>Medecins</role-name>
         <principal-name>philippedimartino</principal-name>
-        <group-name>group</group-name>
+        <group-name>Medecins</group-name>
     </security-role-mapping>
     <entreprise-beans/>
 </glassfish-ejb-jar>

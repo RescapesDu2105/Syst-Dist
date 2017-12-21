@@ -17,5 +17,6 @@ import javax.ejb.Remote;
 public interface SessionBeanAnalysesRemote
 {
     public Principal Authentification();
+    //public Medecin Authentification();
     public Medecin getMedecinByLogin(String login);
 }

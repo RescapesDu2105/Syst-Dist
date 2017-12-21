@@ -29,6 +29,8 @@ public class Main
             Principal principal = EJBAnalyses.Authentification();
             System.out.println("principal = " + principal.getName());
             Medecin medecin = EJBAnalyses.getMedecinByLogin(principal.getName());
+            
+            //Medecin medecin = EJBAnalyses.Authentification();
             System.out.println("medecin = " + medecin);
 
             if(medecin == null)
@@ -40,7 +42,7 @@ public class Main
             }
             else
             {
-                new MedecinForm(principal, medecin, EJBAnalyses).setVisible(true);
+                new MedecinForm(null, medecin, EJBAnalyses).setVisible(true);
             }
                         
             //new MedecinForm(null, null, EJBAnalyses).setVisible(true);
