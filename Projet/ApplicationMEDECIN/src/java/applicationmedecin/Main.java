@@ -42,7 +42,8 @@ public class Main
             {
                 new MedecinForm(principal, medecin, EJBAnalyses).setVisible(true);
             }
-
+                        
+            //new MedecinForm(null, null, EJBAnalyses).setVisible(true);
         }
         catch (Exception ex) 
         {

@@ -8,23 +8,15 @@
             <web-module-libraries/>
             <web-module-additional-libraries>
                 <library>
-                    <file>${reference.ApplicationLABORANTIN.j2ee-module-car}</file>
-                    <path-in-war>/</path-in-war>
-                </library>
-                <library>
-                    <file>${reference.ApplicationPATIENT.j2ee-module-car}</file>
-                    <path-in-war>/</path-in-war>
-                </library>
-                <library>
                     <file>${reference.ApplicationMEDECIN.j2ee-module-car}</file>
                     <path-in-war>/</path-in-war>
                 </library>
                 <library>
-                    <file>${reference.Patient-ejb.dist-ear}</file>
+                    <file>${reference.Analyses-ejb.dist-ear}</file>
                     <path-in-war>/</path-in-war>
                 </library>
                 <library>
-                    <file>${reference.Analyses-ejb.dist-ear}</file>
+                    <file>${reference.JavaLibraryApp.jar}</file>
                     <path-in-war>/</path-in-war>
                 </library>
             </web-module-additional-libraries>
@@ -39,14 +31,6 @@
                 <id>dist-ear</id>
             </reference>
             <reference>
-                <foreign-project>ApplicationLABORANTIN</foreign-project>
-                <artifact-type>j2ee_ear_archive</artifact-type>
-                <script>build.xml</script>
-                <target>dist-ear</target>
-                <clean-target>clean-ear</clean-target>
-                <id>j2ee-module-car</id>
-            </reference>
-            <reference>
                 <foreign-project>ApplicationMEDECIN</foreign-project>
                 <artifact-type>j2ee_ear_archive</artifact-type>
                 <script>build.xml</script>
@@ -55,20 +39,12 @@
                 <id>j2ee-module-car</id>
             </reference>
             <reference>
-                <foreign-project>ApplicationPATIENT</foreign-project>
-                <artifact-type>j2ee_ear_archive</artifact-type>
+                <foreign-project>JavaLibraryApp</foreign-project>
+                <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
-                <target>dist-ear</target>
-                <clean-target>clean-ear</clean-target>
-                <id>j2ee-module-car</id>
-            </reference>
-            <reference>
-                <foreign-project>Patient-ejb</foreign-project>
-                <artifact-type>j2ee_ear_archive</artifact-type>
-                <script>build.xml</script>
-                <target>dist-ear</target>
-                <clean-target>clean-ear</clean-target>
-                <id>dist-ear</id>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
             </reference>
         </references>
     </configuration>

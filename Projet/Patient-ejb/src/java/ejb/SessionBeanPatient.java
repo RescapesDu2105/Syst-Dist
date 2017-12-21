@@ -7,12 +7,7 @@ package ejb;
 
 import entities.Patient;
 import interfaces.SessionBeanPatientRemote;
-import java.security.Principal;
 import java.util.ArrayList;
-import javax.annotation.Resource;
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

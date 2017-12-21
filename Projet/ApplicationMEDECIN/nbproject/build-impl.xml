@@ -770,10 +770,18 @@ exists or setup the property manually. For example like this:
         </fail>
     </target>
     <target depends="init" if="no.dist.ear.dir" name="-deps-module-jar" unless="no.deps">
-        <ant antfile="${project.JavaLibraryInterfacesRemote}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.Analyses-ejb}/build.xml" inheritall="false" target="dist"/>
+        <ant antfile="${project.JavaLibraryApp}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.Patient-ejb}/build.xml" inheritall="false" target="dist"/>
     </target>
     <target depends="init" if="dist.ear.dir" name="-deps-ear-jar" unless="no.deps">
-        <ant antfile="${project.JavaLibraryInterfacesRemote}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.Analyses-ejb}/build.xml" inheritall="false" target="dist-ear">
+            <property location="${build.dir}" name="dist.ear.dir"/>
+        </ant>
+        <ant antfile="${project.JavaLibraryApp}/build.xml" inheritall="false" target="jar"/>
+        <ant antfile="${project.Patient-ejb}/build.xml" inheritall="false" target="dist-ear">
+            <property location="${build.dir}" name="dist.ear.dir"/>
+        </ant>
     </target>
     <target depends="init, -check-main-class, -deps-module-jar, -deps-ear-jar" name="deps-jar"/>
     <target depends="init,deps-jar" name="-pre-pre-compile">
@@ -784,16 +792,22 @@ exists or setup the property manually. For example like this:
         <!-- You can override this target in the ../build.xml file. -->
     </target>
     <target depends="compile" if="is.server.weblogic" name="library-inclusion-in-archive">
-        <basename file="${reference.JavaLibraryInterfacesRemote.jar}" property="manifest.reference.JavaLibraryInterfacesRemote.jar"/>
+        <basename file="${reference.Analyses-ejb.dist}" property="manifest.reference.Analyses-ejb.dist"/>
+        <basename file="${reference.Patient-ejb.dist}" property="manifest.reference.Patient-ejb.dist"/>
+        <basename file="${reference.JavaLibraryApp.jar}" property="manifest.reference.JavaLibraryApp.jar"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Extension-List" value="jar-1 "/>
-            <attribute name="jar-1-Extension-Name" value="${manifest.reference.JavaLibraryInterfacesRemote.jar}"/>
+            <attribute name="Extension-List" value="jar-1 jar-2 jar-3 "/>
+            <attribute name="jar-1-Extension-Name" value="${manifest.reference.Analyses-ejb.dist}"/>
+            <attribute name="jar-2-Extension-Name" value="${manifest.reference.Patient-ejb.dist}"/>
+            <attribute name="jar-3-Extension-Name" value="${manifest.reference.JavaLibraryApp.jar}"/>
         </manifest>
     </target>
     <target depends="compile" if="dist.ear.dir" name="library-inclusion-in-manifest">
-        <copyfiles files="${reference.JavaLibraryInterfacesRemote.jar}" manifestproperty="manifest.reference.JavaLibraryInterfacesRemote.jar" todir="${dist.ear.dir}/lib"/>
+        <copyfiles files="${reference.Analyses-ejb.dist}" manifestproperty="manifest.reference.Analyses-ejb.dist" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.Patient-ejb.dist}" manifestproperty="manifest.reference.Patient-ejb.dist" todir="${dist.ear.dir}"/>
+        <copyfiles files="${reference.JavaLibraryApp.jar}" manifestproperty="manifest.reference.JavaLibraryApp.jar" todir="${dist.ear.dir}/lib"/>
         <manifest file="${build.ear.classes.dir}/META-INF/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${manifest.reference.JavaLibraryInterfacesRemote.jar} lib/${manifest.reference.JavaLibraryInterfacesRemote.jar} "/>
+            <attribute name="Class-Path" value="${manifest.reference.Analyses-ejb.dist} ${manifest.reference.Patient-ejb.dist} ${manifest.reference.JavaLibraryApp.jar} lib/${manifest.reference.JavaLibraryApp.jar} "/>
         </manifest>
     </target>
     <target name="-copy-meta-inf">
@@ -1297,7 +1311,9 @@ exists or setup the property manually. For example like this:
                 ===============
             -->
     <target depends="init" name="deps-clean" unless="no.deps">
-        <ant antfile="${project.JavaLibraryInterfacesRemote}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.Analyses-ejb}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.JavaLibraryApp}/build.xml" inheritall="false" target="clean"/>
+        <ant antfile="${project.Patient-ejb}/build.xml" inheritall="false" target="clean"/>
     </target>
     <target depends="init" name="-do-clean">
         <delete dir="${build.dir}"/>

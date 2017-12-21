@@ -11,20 +11,24 @@ import java.security.Principal;
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
+import javax.annotation.security.RunAs;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnit;
 
 /**
  *
  * @author Philippe
  */
 @Stateless
+//@RunAs("group")
 @DeclareRoles({"Medecins", "Laborantins"})
 public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
 {
+    @PersistenceUnit(unitName = "JavaLibraryAppPU")
     @Resource SessionContext sessionContext; 
     private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("Analyses-ejbPU");
     private final EntityManager em = emf.createEntityManager();
@@ -34,7 +38,16 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
     public Principal Authentification()
     {
         //log("Connexion de : " + sessionContext.getCallerPrincipal().getName())
-        System.out.println("this = " + sessionContext);
+        try
+        {
+            System.out.println("ctx = " + sessionContext);
+            System.out.println("caller = " + sessionContext.getCallerPrincipal());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        
         return sessionContext.getCallerPrincipal();
     }
 
@@ -58,4 +71,5 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         
         return m;
     }
+    
 }
