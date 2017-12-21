@@ -33,7 +33,8 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
     @RolesAllowed({"Medecins", "Laborantins"})
     public Principal Authentification()
     {
-        //log("Connexion de : " + sessionContext.getCallerPrincipal().getName());
+        //log("Connexion de : " + sessionContext.getCallerPrincipal().getName())
+        System.out.println("this = " + sessionContext);
         return sessionContext.getCallerPrincipal();
     }
 

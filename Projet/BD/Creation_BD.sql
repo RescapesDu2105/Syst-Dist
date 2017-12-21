@@ -34,3 +34,6 @@ CREATE TABLE `bd_systdist`.`logs` (
   `idLogs` INT NOT NULL,
   `Infos` VARCHAR(45) NULL,
   PRIMARY KEY (`idLogs`));
+
+
+INSERT INTO bd_systdist.medecin VALUES('1', 'Dimartino', 'Philippe', 'philippedimartino');
