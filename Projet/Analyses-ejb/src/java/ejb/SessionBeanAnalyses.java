@@ -72,8 +72,8 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         Medecin m = null;
         try
         {
-            System.out.println("Salut");
-            m = em.createNamedQuery("Medecin.findByLogin", Medecin.class).setParameter("login", login).getSingleResult();
+            System.out.println("login = " + login);
+            m = em.createQuery("SELECT m FROM Medecin m WHERE m.login = :login", Medecin.class).setParameter("login", login).getResultList().get(0);
             System.out.println("Medecin = " + m);
         }
         catch(Exception e)

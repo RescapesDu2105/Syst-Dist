@@ -27,7 +27,7 @@ public class Main
         try
         {
             Principal principal = EJBAnalyses.Authentification();
-            System.out.println("principal = " + principal.getName());
+            //System.out.println("principal = " + principal.getName());
             Medecin medecin = EJBAnalyses.getMedecinByLogin(principal.getName());
             
             //Medecin medecin = EJBAnalyses.Authentification();
