@@ -1,3 +1,6 @@
+DROP SCHEMA `bd_systdist` ;
+CREATE SCHEMA `bd_systdist`;
+
 CREATE TABLE `bd_systdist`.`patient` (
   `idPatient` INT NOT NULL,
   `Nom` VARCHAR(45) NULL,
@@ -39,3 +42,5 @@ CREATE TABLE `bd_systdist`.`logs` (
 INSERT INTO bd_systdist.medecin VALUES('1', 'Dimartino', 'Philippe', 'philippedimartino');
 COMMIT;
 SELECT * FROM bd_systdist.medecin;
+
+SELECT * FROM Medecin m WHERE login = 'philippedimartino';
