@@ -6,8 +6,7 @@
 package applicationmedecin;
 
 import entities.Medecin;
-import interfaces.SessionBeanAnalysesRemote;
-import java.security.Principal;
+import entities.Patient;
 
 /**
  *
@@ -15,20 +14,18 @@ import java.security.Principal;
  */
 public class MedecinForm extends javax.swing.JFrame
 {
-    private final Principal principal;
     private final Medecin medecin;
-    private final SessionBeanAnalysesRemote EJBAnalyses;
+    private final Patient Patient;
+    
     /**
      * Creates new form MedecinForm
-     * @param principal
      * @param medecin
-     * @param EJBAnalyses
+     * @param Patient
      */
-    public MedecinForm(Principal principal, Medecin medecin, SessionBeanAnalysesRemote EJBAnalyses)
+    public MedecinForm(Medecin medecin, Patient Patient)
     {
-        this.principal = principal;
         this.medecin = medecin;
-        this.EJBAnalyses = EJBAnalyses;
+        this.Patient = Patient;
         
         initComponents();
         setLocationRelativeTo(this);
@@ -45,13 +42,6 @@ public class MedecinForm extends javax.swing.JFrame
     {
 
         jPanel_Central = new javax.swing.JPanel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem_ListePatients = new javax.swing.JMenuItem();
-        jMenuItem_AjouterPatient = new javax.swing.JMenuItem();
-        jMenuItem_ModifierPatient = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,40 +49,12 @@ public class MedecinForm extends javax.swing.JFrame
         jPanel_Central.setLayout(jPanel_CentralLayout);
         jPanel_CentralLayout.setHorizontalGroup(
             jPanel_CentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 880, Short.MAX_VALUE)
+            .addGap(0, 669, Short.MAX_VALUE)
         );
         jPanel_CentralLayout.setVerticalGroup(
             jPanel_CentralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 557, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
-
-        jMenu1.setText("Gérer les patients");
-
-        jMenuItem_ListePatients.setText("Liste des patients");
-        jMenuItem_ListePatients.addActionListener(new java.awt.event.ActionListener()
-        {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-            {
-                jMenuItem_ListePatientsActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem_ListePatients);
-
-        jMenuItem_AjouterPatient.setText("Ajouter un patient");
-        jMenu1.add(jMenuItem_AjouterPatient);
-
-        jMenuItem_ModifierPatient.setText("Modifier un patient");
-        jMenu1.add(jMenuItem_ModifierPatient);
-
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Prescrire des analyses");
-        jMenuBar1.add(jMenu2);
-
-        jMenu3.setText("Consulter les résultats");
-        jMenuBar1.add(jMenu3);
-
-        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -114,21 +76,9 @@ public class MedecinForm extends javax.swing.JFrame
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem_ListePatientsActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jMenuItem_ListePatientsActionPerformed
-    {//GEN-HEADEREND:event_jMenuItem_ListePatientsActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem_ListePatientsActionPerformed
-
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem_AjouterPatient;
-    private javax.swing.JMenuItem jMenuItem_ListePatients;
-    private javax.swing.JMenuItem jMenuItem_ModifierPatient;
     private javax.swing.JPanel jPanel_Central;
     // End of variables declaration//GEN-END:variables
 }

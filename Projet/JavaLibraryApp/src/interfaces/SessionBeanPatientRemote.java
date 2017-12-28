@@ -17,6 +17,7 @@ import javax.ejb.Remote;
 public interface SessionBeanPatientRemote
 {
     ArrayList<Patient> getPatients();
+    ArrayList<Patient> ChercherPatient(String nom, String prenom);
     void AjouterPatient(int idPatient, String nom, String prenom, String login);
     void ModifierPatient(int idPatient);
     Patient getPatient(int idPatient);

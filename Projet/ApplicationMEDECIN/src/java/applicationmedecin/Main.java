@@ -7,6 +7,7 @@ package applicationmedecin;
 
 import entities.Medecin;
 import interfaces.SessionBeanAnalysesRemote;
+import interfaces.SessionBeanPatientRemote;
 import java.security.Principal;
 import javax.ejb.EJB;
 import javax.swing.JOptionPane;
@@ -19,6 +20,9 @@ public class Main
 {
     @EJB
     private static SessionBeanAnalysesRemote EJBAnalyses;
+    @EJB
+    private static SessionBeanPatientRemote EJBPatients;
+    
     /**
      * @param args the command line arguments
      */
@@ -31,7 +35,8 @@ public class Main
             Medecin medecin = EJBAnalyses.getMedecinByLogin(principal.getName());
             
             //Medecin medecin = EJBAnalyses.Authentification();
-            System.out.println("medecin = " + medecin);
+            //System.out.println("medecin = " + medecin);
+            System.out.println("Patients 3 = " + EJBPatients.ChercherPatient("Serrhini", "Souad"));
 
             if(medecin == null)
             {
@@ -42,14 +47,12 @@ public class Main
             }
             else
             {
-                new MedecinForm(null, medecin, EJBAnalyses).setVisible(true);
+                new EntrerPatientForm(EJBAnalyses, EJBPatients, medecin).setVisible(true);
             }
-                        
-            //new MedecinForm(null, null, EJBAnalyses).setVisible(true);
         }
         catch (Exception ex) 
         {
-
+            ex.printStackTrace();
         }
     }
     

@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  *
@@ -31,6 +32,32 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
         try
         {
             lp = (ArrayList<Patient>) em.createNamedQuery("Patient.findAll").getResultList();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;      
+        }
+        finally
+        {
+            em.close();
+        }          
+        
+        return lp;
+    }
+    
+    @Override
+    public ArrayList<Patient> ChercherPatient(String nom, String prenom)
+    {        
+        ArrayList<Patient> lp = null;
+        em.getTransaction().begin();        
+        try
+        {
+            Query query = em.createNamedQuery("Patient.findByNomPrenom");
+            query.setParameter("nom", nom);
+            query.setParameter("prenom", prenom);
+            
+            lp = (ArrayList<Patient>) query.getResultList();
         }
         catch(Exception e)
         {

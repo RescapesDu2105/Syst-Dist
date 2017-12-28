@@ -25,17 +25,11 @@ import javax.persistence.Persistence;
 @DeclareRoles("Medecins")//, "Laborantins", "asadmin"})
 public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
 {
-    //@PersistenceUnit(unitName = "JavaLibraryAppPU")
     @Resource SessionContext sessionContext; 
-    //private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("Analyses-ejbPU");
-    //private final EntityManager em = emf.createEntityManager();
-
     @Override
     @RolesAllowed("Medecins")//, "Laborantins", "asadmin"})
     public Principal Authentification()
-    //public Medecin Authentification()
     {
-        //log("Connexion de : " + sessionContext.getCallerPrincipal().getName())
         try
         {
             System.out.println("Authentification");
@@ -49,10 +43,6 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
                 {
                     return sessionContext.getCallerPrincipal();
                 }
-                
-                //Medecin m = getMedecinByLogin(sessionContext.getCallerPrincipal().getName());
-                
-                //return m;
             }
         }
         catch (Exception e)

@@ -40,6 +40,9 @@ CREATE TABLE `bd_systdist`.`logs` (
 
 
 INSERT INTO bd_systdist.medecin VALUES('1', 'Dimartino', 'Philippe', 'philippedimartino');
+
+INSERT INTO bd_systdist.patient VALUES('1', 'Serrhini', 'Souad', 'sousou');
+
 COMMIT;
 SELECT * FROM bd_systdist.medecin;
 
