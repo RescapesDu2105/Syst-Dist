@@ -7,6 +7,9 @@ package applicationmedecin;
 
 import entities.Medecin;
 import entities.Patient;
+import interfaces.SessionBeanAnalysesRemote;
+import interfaces.SessionBeanPatientRemote;
+import javax.ejb.EJB;
 
 /**
  *
@@ -14,16 +17,24 @@ import entities.Patient;
  */
 public class MedecinForm extends javax.swing.JFrame
 {
+    @EJB
+    private static SessionBeanAnalysesRemote EJBAnalyses;
+    @EJB
+    private static SessionBeanPatientRemote EJBPatients;
     private final Medecin medecin;
     private final Patient Patient;
     
     /**
      * Creates new form MedecinForm
+     * @param EJBAnalyses
+     * @param EJBPatients
      * @param medecin
      * @param Patient
      */
-    public MedecinForm(Medecin medecin, Patient Patient)
+    public MedecinForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin, Patient Patient)
     {
+        MedecinForm.EJBAnalyses = EJBAnalyses;
+        MedecinForm.EJBPatients = EJBPatients;  
         this.medecin = medecin;
         this.Patient = Patient;
         

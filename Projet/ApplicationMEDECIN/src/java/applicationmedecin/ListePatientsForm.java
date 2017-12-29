@@ -7,10 +7,15 @@ package applicationmedecin;
 
 
 import ejb.SessionBeanPatient;
+import entities.Medecin;
 import entities.Patient;
+import interfaces.SessionBeanAnalysesRemote;
 import interfaces.SessionBeanPatientRemote;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.ejb.EJB;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -20,9 +25,12 @@ import javax.swing.table.DefaultTableModel;
 public class ListePatientsForm extends javax.swing.JFrame
 {
     @EJB
+    private static SessionBeanAnalysesRemote EJBAnalyses;
+    @EJB
     private static SessionBeanPatientRemote EJBPatients;
+    private final Medecin medecin;
     private final MedecinForm mainFrame;
-    private final ArrayList<Patient> Patients;
+    private final List Patients;
 
     /**
      * Creates new form GestionPatientsForm
@@ -30,24 +38,43 @@ public class ListePatientsForm extends javax.swing.JFrame
      */
     public ListePatientsForm(MedecinForm mainFrame)
     {
+        ListePatientsForm.EJBAnalyses = null;
+        ListePatientsForm.EJBPatients = null;  
+        this.medecin = null;
         this.mainFrame = mainFrame;
         this.Patients = null;
         
         initComponents();
+        setLocationRelativeTo(this);
         
         ChargerListePatients();
     }
     
-    public ListePatientsForm(ArrayList<Patient> Patients)
+    public ListePatientsForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin, List Patients)
     {
+        ListePatientsForm.EJBAnalyses = EJBAnalyses;
+        ListePatientsForm.EJBPatients = EJBPatients;  
+        this.medecin = medecin;
         this.Patients = Patients;
         this.mainFrame = null;
         
-        DefaultTableModel dlm = (DefaultTableModel) jTablePatients.getModel();
-        dlm.addRow(this.Patients.toArray());
-        jLabel.setText("Selectionner un patient dans la liste");
-        
         initComponents();
+        setLocationRelativeTo(this);
+        
+        System.out.println("Patients = " + Patients);
+        DefaultTableModel dlm = (DefaultTableModel) jTablePatients.getModel();
+        Object[][] objects = new Object[Patients.size()][4];
+        
+        for(int i = 0 ; i < Patients.size() ; i++)
+        {
+            Patient p = (Patient) Patients.get(i);
+            objects[i][0] = p.getIdPatient();
+            objects[i][1] = p.getNom();
+            objects[i][2] = p.getPrenom();
+            objects[i][3] = p.getLogin();
+            dlm.addRow(objects[i]);
+        }
+        jLabel.setText("Selectionnez un patient dans la liste");
     }
 
     /**
@@ -62,7 +89,7 @@ public class ListePatientsForm extends javax.swing.JFrame
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTablePatients = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        jButton_Annuler = new javax.swing.JButton();
         jLabel = new javax.swing.JLabel();
         jButton_Ok = new javax.swing.JButton();
 
@@ -75,17 +102,17 @@ public class ListePatientsForm extends javax.swing.JFrame
             },
             new String []
             {
-                "idPatient", "Nom", "Prénom"
+                "idPatient", "Nom", "Prénom", "Login"
             }
         )
         {
             Class[] types = new Class []
             {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean []
             {
-                false, false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex)
@@ -98,7 +125,13 @@ public class ListePatientsForm extends javax.swing.JFrame
                 return canEdit [columnIndex];
             }
         });
-        jTablePatients.setColumnSelectionAllowed(true);
+        jTablePatients.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mouseClicked(java.awt.event.MouseEvent evt)
+            {
+                jTablePatientsMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTablePatients);
         jTablePatients.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (jTablePatients.getColumnModel().getColumnCount() > 0)
@@ -107,7 +140,14 @@ public class ListePatientsForm extends javax.swing.JFrame
             jTablePatients.getColumnModel().getColumn(2).setPreferredWidth(200);
         }
 
-        jButton1.setText("Annuler");
+        jButton_Annuler.setText("Annuler");
+        jButton_Annuler.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton_AnnulerActionPerformed(evt);
+            }
+        });
 
         jButton_Ok.setText("Ok");
         jButton_Ok.addActionListener(new java.awt.event.ActionListener()
@@ -128,27 +168,27 @@ public class ListePatientsForm extends javax.swing.JFrame
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 856, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(395, 395, 395)
-                        .addComponent(jLabel)
+                        .addGap(378, 378, 378)
+                        .addComponent(jButton_Annuler)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton_Ok)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(378, 378, 378)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton_Ok)
+                .addGap(320, 320, 320)
+                .addComponent(jLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(jLabel)
+                .addContainerGap()
+                .addComponent(jLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(jButton_Annuler)
                     .addComponent(jButton_Ok))
                 .addContainerGap())
         );
@@ -161,28 +201,44 @@ public class ListePatientsForm extends javax.swing.JFrame
         int selectedRow = jTablePatients.getSelectedRow();
         if(selectedRow == -1)
         {
-            
+            JOptionPane.showMessageDialog(this, "Aucun patient sélectionné !", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         else
         {
-            Patient selectedPatient = Patients.get(selectedRow);
-            Patients.clear();
-            Patients.add(selectedPatient);
-            
+            Patient selectedPatient = (Patient) Patients.get(selectedRow);            
             this.dispose();
+            
+            new MedecinForm(EJBAnalyses, EJBPatients, medecin, selectedPatient).setVisible(true);
         }
     }//GEN-LAST:event_jButton_OkActionPerformed
 
+    private void jButton_AnnulerActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_AnnulerActionPerformed
+    {//GEN-HEADEREND:event_jButton_AnnulerActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton_AnnulerActionPerformed
+
+    private void jTablePatientsMouseClicked(java.awt.event.MouseEvent evt)//GEN-FIRST:event_jTablePatientsMouseClicked
+    {//GEN-HEADEREND:event_jTablePatientsMouseClicked
+        if (evt.getClickCount() == 2 && !evt.isConsumed()) 
+        {
+            int selectedRow = jTablePatients.getSelectedRow();
+            Patient selectedPatient = (Patient) Patients.get(selectedRow);            
+            this.dispose();
+            
+            new MedecinForm(EJBAnalyses, EJBPatients, medecin, selectedPatient).setVisible(true);
+        }
+    }//GEN-LAST:event_jTablePatientsMouseClicked
+
     private void ChargerListePatients()
     {        
-        ArrayList<Patient> lp = EJBPatients.getPatients();
+        //ArrayList<Patient> lp = EJBPatients.getPatients();
         
-        DefaultTableModel dlm = (DefaultTableModel) jTablePatients.getModel();
-        dlm.addRow(lp.toArray());
+        //DefaultTableModel dlm = (DefaultTableModel) jTablePatients.getModel();
+        //dlm.addRow(lp.toArray());
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton_Annuler;
     private javax.swing.JButton jButton_Ok;
     private javax.swing.JLabel jLabel;
     private javax.swing.JScrollPane jScrollPane1;

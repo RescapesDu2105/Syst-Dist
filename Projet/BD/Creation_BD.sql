@@ -2,10 +2,11 @@ DROP SCHEMA `bd_systdist` ;
 CREATE SCHEMA `bd_systdist`;
 
 CREATE TABLE `bd_systdist`.`patient` (
-  `idPatient` INT NOT NULL,
+  `idPatient` INT NOT NULL AUTO_INCREMENT,
   `Nom` VARCHAR(45) NULL,
   `Prenom` VARCHAR(45) NULL,
   `Login` VARCHAR(45) NULL,
+  UNIQUE(`Login`),
   PRIMARY KEY (`idPatient`));
 
 CREATE TABLE `bd_systdist`.`medecin` (
@@ -13,6 +14,7 @@ CREATE TABLE `bd_systdist`.`medecin` (
   `Nom` VARCHAR(45) NULL,
   `Prenom` VARCHAR(45) NULL,
   `Login` VARCHAR(45) NULL,
+  UNIQUE(`Login`),
   PRIMARY KEY (`idMedecin`));
 
 CREATE TABLE `bd_systdist`.`demande` (
@@ -42,8 +44,10 @@ CREATE TABLE `bd_systdist`.`logs` (
 INSERT INTO bd_systdist.medecin VALUES('1', 'Dimartino', 'Philippe', 'philippedimartino');
 
 INSERT INTO bd_systdist.patient VALUES('1', 'Serrhini', 'Souad', 'sousou');
-
+INSERT INTO bd_systdist.patient VALUES('2', 'Serrhini', 'Souad', 'sousou2');
 COMMIT;
+
 SELECT * FROM bd_systdist.medecin;
+SELECT * FROM bd_systdist.patient;
 
 SELECT * FROM Medecin m WHERE login = 'philippedimartino';

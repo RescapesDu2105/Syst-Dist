@@ -39,7 +39,7 @@ public class Logs implements Serializable
     @NotNull
     @Column(name = "idLogs")
     private Integer idLogs;
-    @Size(max = 255)
+    @Size(max = 45)
     @Column(name = "Infos")
     private String infos;
 

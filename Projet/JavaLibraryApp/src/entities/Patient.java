@@ -1,15 +1,19 @@
+package entities;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entities;
+
 
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -39,8 +43,8 @@ public class Patient implements Serializable
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "idPatient")
     private Integer idPatient;
     @Size(max = 255)
@@ -58,6 +62,13 @@ public class Patient implements Serializable
     public Patient()
     {
     }
+    
+    /*public Patient(String nom, String prenom, String login)
+    {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.login = login;
+    }*/
 
     public Patient(Integer idPatient)
     {
@@ -142,7 +153,7 @@ public class Patient implements Serializable
     @Override
     public String toString()
     {
-        return "entities.Patient[ idPatient=" + idPatient + " ]";
+        return this.idPatient + " | " + this.nom + " | " + this.prenom;
     }
     
 }

@@ -10,6 +10,7 @@ import entities.Patient;
 import interfaces.SessionBeanAnalysesRemote;
 import interfaces.SessionBeanPatientRemote;
 import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.swing.JOptionPane;
 
@@ -36,16 +37,9 @@ public class EntrerPatientForm extends javax.swing.JFrame
         EntrerPatientForm.EJBAnalyses = EJBAnalyses;
         EntrerPatientForm.EJBPatients = EJBPatients;
         this.medecin = medecin;
-        initComponents();        
         
-        System.out.println("Analsyes = " + EJBAnalyses);
-        System.out.println("Analsyes 2 = " + this.EJBAnalyses);
-        System.out.println("Analsyes 3 = " + EJBAnalyses.getMedecinByLogin("philippedimartino"));
-        System.out.println("Analsyes 4 = " + this.EJBAnalyses.getMedecinByLogin("philippedimartino"));
-        System.out.println("Patients = " + EJBPatients);
-        System.out.println("Patients 2 = " + this.EJBPatients);
-        System.out.println("Patients 3 = " + EJBPatients.ChercherPatient("Serrhini", "Souad"));
-        System.out.println("Patients 4 = " + this.EJBPatients.ChercherPatient("Serrhini", "Souad"));
+        initComponents();       
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -74,7 +68,11 @@ public class EntrerPatientForm extends javax.swing.JFrame
 
         jLabel1.setText("Nom :");
 
+        jTF_Nom.setText("Serrhini");
+
         jLabel3.setText("Prénom :");
+
+        jTF_Prenom.setText("Souad");
 
         jButton_Chercher.setText("Chercher");
         jButton_Chercher.addActionListener(new java.awt.event.ActionListener()
@@ -155,7 +153,7 @@ public class EntrerPatientForm extends javax.swing.JFrame
 
     private void jButton_ChercherActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_ChercherActionPerformed
     {//GEN-HEADEREND:event_jButton_ChercherActionPerformed
-        ArrayList<Patient> Patients = EJBPatients.ChercherPatient(jTF_Nom.getText(), jTF_Prenom.getText());
+        List Patients = EJBPatients.ChercherPatient(jTF_Nom.getText(), jTF_Prenom.getText());
         
         switch(Patients.size())
         {
@@ -163,17 +161,17 @@ public class EntrerPatientForm extends javax.swing.JFrame
                 JOptionPane.showMessageDialog(this, "Aucun patient trouvé !", "Erreur", JOptionPane.ERROR_MESSAGE);
                 break;
             case 1:
-                new MedecinForm(medecin, Patients.get(0)).setVisible(true);
+                new MedecinForm(EJBAnalyses, EJBPatients, medecin, (Patient) Patients.get(0)).setVisible(true);
                 break;
             default:
-                new ListePatientsForm(Patients).setVisible(true);
+                new ListePatientsForm(EJBAnalyses, EJBPatients, medecin, Patients).setVisible(true);
                 break;
         }
     }//GEN-LAST:event_jButton_ChercherActionPerformed
 
     private void jButton_AjouterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_AjouterActionPerformed
     {//GEN-HEADEREND:event_jButton_AjouterActionPerformed
-        new AjouterPatientForm(this).setVisible(true);
+        new AjouterPatientForm(EJBAnalyses, EJBPatients, medecin, this).setVisible(true);
     }//GEN-LAST:event_jButton_AjouterActionPerformed
 
     private void jButton_QuitterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_QuitterActionPerformed

@@ -39,8 +39,8 @@
                       <Component id="jButton_Ajouter" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jTF_Nom" alignment="0" pref="218" max="32767" attributes="0"/>
-                  <Component id="jTF_Nom2" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jTF_Nom1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jTF_Login" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jTF_Prenom" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
           </Group>
@@ -63,13 +63,13 @@
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jTF_Nom1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTF_Prenom" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jTF_Nom2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTF_Login" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -96,6 +96,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTF_Nom">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Barsics"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
@@ -107,9 +110,15 @@
         <Property name="text" type="java.lang.String" value="Login :"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTF_Nom1">
+    <Component class="javax.swing.JTextField" name="jTF_Prenom">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Joseph"/>
+      </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTF_Nom2">
+    <Component class="javax.swing.JTextField" name="jTF_Login">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="babajojo"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton_Ajouter">
       <Properties>

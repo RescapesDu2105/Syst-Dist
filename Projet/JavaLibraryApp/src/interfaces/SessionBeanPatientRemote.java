@@ -7,6 +7,7 @@ package interfaces;
 
 import entities.Patient;
 import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -16,9 +17,10 @@ import javax.ejb.Remote;
 @Remote
 public interface SessionBeanPatientRemote
 {
-    ArrayList<Patient> getPatients();
+    List getPatients();
     ArrayList<Patient> ChercherPatient(String nom, String prenom);
-    void AjouterPatient(int idPatient, String nom, String prenom, String login);
+    boolean AjouterPatient(String nom, String prenom, String login);
+    boolean AjouterPatient(Patient p);
     void ModifierPatient(int idPatient);
     Patient getPatient(int idPatient);
 }

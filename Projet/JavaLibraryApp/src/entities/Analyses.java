@@ -40,10 +40,10 @@ public class Analyses implements Serializable
     @NotNull
     @Column(name = "idAnalyses")
     private Integer idAnalyses;
-    @Size(max = 255)
+    @Size(max = 45)
     @Column(name = "Item")
     private String item;
-    @Size(max = 255)
+    @Size(max = 45)
     @Column(name = "Valeur")
     private String valeur;
 

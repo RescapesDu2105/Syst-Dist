@@ -30,13 +30,13 @@ public class Main
     {
         try
         {
+            //System.out.println("Patients 3 = " + EJBPatients.ChercherPatient("Serrhini", "Souad"));
             Principal principal = EJBAnalyses.Authentification();
             //System.out.println("principal = " + principal.getName());
             Medecin medecin = EJBAnalyses.getMedecinByLogin(principal.getName());
             
             //Medecin medecin = EJBAnalyses.Authentification();
             //System.out.println("medecin = " + medecin);
-            System.out.println("Patients 3 = " + EJBPatients.ChercherPatient("Serrhini", "Souad"));
 
             if(medecin == null)
             {

@@ -5,22 +5,41 @@
  */
 package applicationmedecin;
 
+import entities.Medecin;
+import entities.Patient;
+import interfaces.SessionBeanAnalysesRemote;
+import interfaces.SessionBeanPatientRemote;
+import javax.ejb.EJB;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Philippe
  */
 public class AjouterPatientForm extends javax.swing.JFrame
 {
+    @EJB
+    private static SessionBeanAnalysesRemote EJBAnalyses;
+    @EJB
+    private static SessionBeanPatientRemote EJBPatients;
+    private final Medecin medecin;
     private final EntrerPatientForm frame;
     /**
      * Creates new form AjouterPatientForm
+     * @param EJBAnalyses
+     * @param EJBPatients
      * @param frame
+     * @param medecin
      */
-    public AjouterPatientForm(EntrerPatientForm frame)
-    {
+    public AjouterPatientForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin, EntrerPatientForm frame)
+    {        
+        AjouterPatientForm.EJBAnalyses = EJBAnalyses;
+        AjouterPatientForm.EJBPatients = EJBPatients;  
+        this.medecin = medecin;
         this.frame = frame;
         
         initComponents();
+        setLocationRelativeTo(this);
     }
 
     /**
@@ -38,8 +57,8 @@ public class AjouterPatientForm extends javax.swing.JFrame
         jTF_Nom = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTF_Nom1 = new javax.swing.JTextField();
-        jTF_Nom2 = new javax.swing.JTextField();
+        jTF_Prenom = new javax.swing.JTextField();
+        jTF_Login = new javax.swing.JTextField();
         jButton_Ajouter = new javax.swing.JButton();
         jButton_Annuler = new javax.swing.JButton();
 
@@ -50,9 +69,15 @@ public class AjouterPatientForm extends javax.swing.JFrame
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel2.setText("Ajouter un patient");
 
+        jTF_Nom.setText("Barsics");
+
         jLabel3.setText("Prénom :");
 
         jLabel4.setText("Login :");
+
+        jTF_Prenom.setText("Joseph");
+
+        jTF_Login.setText("babajojo");
 
         jButton_Ajouter.setText("Ajouter");
         jButton_Ajouter.addActionListener(new java.awt.event.ActionListener()
@@ -90,8 +115,8 @@ public class AjouterPatientForm extends javax.swing.JFrame
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton_Ajouter))
                     .addComponent(jTF_Nom, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
-                    .addComponent(jTF_Nom2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTF_Nom1, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(jTF_Login, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTF_Prenom, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGap(20, 20, 20))
             .addGroup(layout.createSequentialGroup()
                 .addGap(50, 50, 50)
@@ -109,12 +134,12 @@ public class AjouterPatientForm extends javax.swing.JFrame
                     .addComponent(jTF_Nom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTF_Nom1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTF_Prenom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTF_Nom2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTF_Login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton_Ajouter)
@@ -132,57 +157,30 @@ public class AjouterPatientForm extends javax.swing.JFrame
 
     private void jButton_AjouterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_AjouterActionPerformed
     {//GEN-HEADEREND:event_jButton_AjouterActionPerformed
-        
+        if(jTF_Nom.getText().isEmpty() || jTF_Prenom.getText().isEmpty() || jTF_Login.getText().isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Des champs n'ont pas été complétés !", "Erreur", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            frame.dispose();
+            this.dispose();
+            
+            Patient p = new Patient();
+            p.setNom(jTF_Nom.getText());
+            p.setPrenom(jTF_Prenom.getText());
+            p.setLogin(jTF_Login.getText());
+            
+            boolean error = EJBPatients.AjouterPatient(p);
+            if (error)
+            {
+                JOptionPane.showMessageDialog(this, "Une erreur interne s'est produite !", "Erreur", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
+            }
+            else
+                new MedecinForm(EJBAnalyses, EJBPatients, medecin, p).setVisible(true);
+        }
     }//GEN-LAST:event_jButton_AjouterActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[])
-    {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try
-        {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
-            {
-                if ("Nimbus".equals(info.getName()))
-                {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        }
-        catch (ClassNotFoundException ex)
-        {
-            java.util.logging.Logger.getLogger(AjouterPatientForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        catch (InstantiationException ex)
-        {
-            java.util.logging.Logger.getLogger(AjouterPatientForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        catch (IllegalAccessException ex)
-        {
-            java.util.logging.Logger.getLogger(AjouterPatientForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        catch (javax.swing.UnsupportedLookAndFeelException ex)
-        {
-            java.util.logging.Logger.getLogger(AjouterPatientForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                new AjouterPatientForm(null).setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_Ajouter;
@@ -191,8 +189,8 @@ public class AjouterPatientForm extends javax.swing.JFrame
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JTextField jTF_Login;
     private javax.swing.JTextField jTF_Nom;
-    private javax.swing.JTextField jTF_Nom1;
-    private javax.swing.JTextField jTF_Nom2;
+    private javax.swing.JTextField jTF_Prenom;
     // End of variables declaration//GEN-END:variables
 }

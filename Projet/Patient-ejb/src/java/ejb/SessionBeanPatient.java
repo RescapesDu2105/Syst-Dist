@@ -8,11 +8,17 @@ package ejb;
 import entities.Patient;
 import interfaces.SessionBeanPatientRemote;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 
 /**
  *
@@ -21,22 +27,22 @@ import javax.persistence.Query;
 @Stateless
 public class SessionBeanPatient implements SessionBeanPatientRemote
 {   
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("Patient-ejbPU");
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
     private final EntityManager em = emf.createEntityManager();
         
     @Override
-    public ArrayList<Patient> getPatients()
+    public List getPatients()
     {        
-        ArrayList<Patient> lp = null;
+        //ArrayList<Patient> lp = null;
+        List lp = null;
         em.getTransaction().begin();        
         try
         {
-            lp = (ArrayList<Patient>) em.createNamedQuery("Patient.findAll").getResultList();
+            lp = em.createNamedQuery("Patient.findAll").getResultList();
         }
         catch(Exception e)
         {
             e.printStackTrace();
-            return null;      
         }
         finally
         {
@@ -57,12 +63,11 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
             query.setParameter("nom", nom);
             query.setParameter("prenom", prenom);
             
-            lp = (ArrayList<Patient>) query.getResultList();
+            lp = new ArrayList<>(query.getResultList());
         }
         catch(Exception e)
         {
             e.printStackTrace();
-            return null;      
         }
         finally
         {
@@ -73,18 +78,18 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
     }
 
     @Override
-    public void AjouterPatient(int idPatient, String nom, String prenom, String login)
+    public boolean AjouterPatient(String nom, String prenom, String login)
     {
+        boolean error = false;
+        
         em.getTransaction().begin();
         
         try
         {
             Patient p = new Patient();
-            
-            p.setIdPatient(idPatient);
-            p.setLogin(login);
             p.setNom(nom);
             p.setPrenom(prenom);
+            p.setLogin(login);
             
             em.persist(p);
             
@@ -94,11 +99,47 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
         {
             e.printStackTrace();
             em.getTransaction().rollback();
+            error = true;
         }
         finally
         {
             em.close();
         }
+        
+        return error;
+    }
+    @Override
+    public boolean AjouterPatient(Patient p)
+    {
+        boolean error = false;
+        
+        em.getTransaction().begin();
+        
+        try
+        {
+            if(em.contains(p))
+            {
+                System.out.println("Contient");
+            }
+            else
+            {
+                em.persist(p);            
+                em.getTransaction().commit();
+                error = !em.contains(p);
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            //em.getTransaction().rollback();
+            error = true;
+        }
+        finally
+        {
+            em.close();
+        }
+        
+        return error;
     }
 
     @Override
