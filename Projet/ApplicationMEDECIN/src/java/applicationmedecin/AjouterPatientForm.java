@@ -63,6 +63,7 @@ public class AjouterPatientForm extends javax.swing.JFrame
         jButton_Annuler = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setText("Nom :");
 
@@ -171,14 +172,25 @@ public class AjouterPatientForm extends javax.swing.JFrame
             p.setPrenom(jTF_Prenom.getText());
             p.setLogin(jTF_Login.getText());
             
-            boolean error = EJBPatients.AjouterPatient(p);
-            if (error)
+            int error = EJBPatients.AjouterPatient(p);
+            switch (error)
             {
-                JOptionPane.showMessageDialog(this, "Une erreur interne s'est produite !", "Erreur", JOptionPane.ERROR_MESSAGE);
-                System.exit(1);
+                case 1:
+                    JOptionPane.showMessageDialog(this, "Une erreur interne s'est produite !", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    System.exit(1);
+                    break;
+                case 2:                    
+                    JOptionPane.showMessageDialog(this, "Le login est déjà utilisé !", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    System.exit(1);
+                    break;
+                case 3:                     
+                    JOptionPane.showMessageDialog(this, "Le patient n'a pas bien été inséré !", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    System.exit(1);
+                    break;
+                default:                    
+                    new MedecinForm(EJBAnalyses, EJBPatients, medecin, p).setVisible(true);
+                    break;
             }
-            else
-                new MedecinForm(EJBAnalyses, EJBPatients, medecin, p).setVisible(true);
         }
     }//GEN-LAST:event_jButton_AjouterActionPerformed
 

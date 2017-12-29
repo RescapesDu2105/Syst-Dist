@@ -6,13 +6,10 @@
 package applicationmedecin;
 
 
-import ejb.SessionBeanPatient;
 import entities.Medecin;
 import entities.Patient;
 import interfaces.SessionBeanAnalysesRemote;
 import interfaces.SessionBeanPatientRemote;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.swing.JOptionPane;
@@ -29,14 +26,14 @@ public class ListePatientsForm extends javax.swing.JFrame
     @EJB
     private static SessionBeanPatientRemote EJBPatients;
     private final Medecin medecin;
-    private final MedecinForm mainFrame;
+    private final EntrerPatientForm mainFrame;
     private final List Patients;
 
     /**
      * Creates new form GestionPatientsForm
      * @param mainFrame
      */
-    public ListePatientsForm(MedecinForm mainFrame)
+    public ListePatientsForm(EntrerPatientForm mainFrame)
     {
         ListePatientsForm.EJBAnalyses = null;
         ListePatientsForm.EJBPatients = null;  
@@ -45,21 +42,21 @@ public class ListePatientsForm extends javax.swing.JFrame
         this.Patients = null;
         
         initComponents();
-        setLocationRelativeTo(this);
+        setLocationRelativeTo(null);
         
         ChargerListePatients();
     }
     
-    public ListePatientsForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin, List Patients)
+    public ListePatientsForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, EntrerPatientForm mainFrame, Medecin medecin, List Patients)
     {
         ListePatientsForm.EJBAnalyses = EJBAnalyses;
         ListePatientsForm.EJBPatients = EJBPatients;  
         this.medecin = medecin;
         this.Patients = Patients;
-        this.mainFrame = null;
+        this.mainFrame = mainFrame;
         
         initComponents();
-        setLocationRelativeTo(this);
+        setLocationRelativeTo(null);
         
         System.out.println("Patients = " + Patients);
         DefaultTableModel dlm = (DefaultTableModel) jTablePatients.getModel();
@@ -94,6 +91,7 @@ public class ListePatientsForm extends javax.swing.JFrame
         jButton_Ok = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jTablePatients.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
@@ -207,6 +205,7 @@ public class ListePatientsForm extends javax.swing.JFrame
         {
             Patient selectedPatient = (Patient) Patients.get(selectedRow);            
             this.dispose();
+            mainFrame.dispose();
             
             new MedecinForm(EJBAnalyses, EJBPatients, medecin, selectedPatient).setVisible(true);
         }
@@ -224,6 +223,7 @@ public class ListePatientsForm extends javax.swing.JFrame
             int selectedRow = jTablePatients.getSelectedRow();
             Patient selectedPatient = (Patient) Patients.get(selectedRow);            
             this.dispose();
+            mainFrame.dispose();
             
             new MedecinForm(EJBAnalyses, EJBPatients, medecin, selectedPatient).setVisible(true);
         }

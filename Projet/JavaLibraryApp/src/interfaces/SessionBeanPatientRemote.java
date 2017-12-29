@@ -19,8 +19,8 @@ public interface SessionBeanPatientRemote
 {
     List getPatients();
     ArrayList<Patient> ChercherPatient(String nom, String prenom);
-    boolean AjouterPatient(String nom, String prenom, String login);
-    boolean AjouterPatient(Patient p);
-    void ModifierPatient(int idPatient);
+    int AjouterPatient(String nom, String prenom, String login);
+    int AjouterPatient(Patient p);
+    void ModifierPatient(Patient p);
     Patient getPatient(int idPatient);
 }

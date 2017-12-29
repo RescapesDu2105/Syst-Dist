@@ -36,7 +36,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Patient.findAll", query = "SELECT p FROM Patient p")
     , @NamedQuery(name = "Patient.findByIdPatient", query = "SELECT p FROM Patient p WHERE p.idPatient = :idPatient")
     , @NamedQuery(name = "Patient.findByLogin", query = "SELECT p FROM Patient p WHERE p.login = :login")
-    , @NamedQuery(name = "Patient.findByNomPrenom", query = "SELECT p FROM Patient p WHERE UPPER(p.nom) = UPPER(:nom) AND UPPER(p.prenom) = UPPER(:prenom)")
+    , @NamedQuery(name = "Patient.findByNomPrenom", query = "SELECT p FROM Patient p WHERE UPPER(p.nom) = UPPER(:nom) AND UPPER(p.prenom) = UPPER(:prenom)")    
+    //, @NamedQuery(name = "Patient.update", query = "UPDATE Patient SET nom = :nom, SET prenom = :prenom, SET login = :login WHERE idPatient = :idPatient")
+        
 })
 public class Patient implements Serializable
 {
@@ -153,7 +155,7 @@ public class Patient implements Serializable
     @Override
     public String toString()
     {
-        return this.idPatient + " | " + this.nom + " | " + this.prenom;
+        return this.nom + " " + this.prenom;
     }
     
 }

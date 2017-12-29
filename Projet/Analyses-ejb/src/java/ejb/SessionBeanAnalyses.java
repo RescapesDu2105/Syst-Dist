@@ -73,6 +73,7 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         finally
         {
             em.close();
+            emf.close();
         }
         
         return m;

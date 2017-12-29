@@ -27,12 +27,11 @@ import javax.validation.ValidatorFactory;
 @Stateless
 public class SessionBeanPatient implements SessionBeanPatientRemote
 {   
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
-    private final EntityManager em = emf.createEntityManager();
-        
     @Override
     public List getPatients()
     {        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
         //ArrayList<Patient> lp = null;
         List lp = null;
         em.getTransaction().begin();        
@@ -47,6 +46,7 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
         finally
         {
             em.close();
+            emf.close();
         }          
         
         return lp;
@@ -55,6 +55,9 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
     @Override
     public ArrayList<Patient> ChercherPatient(String nom, String prenom)
     {        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
+        
         ArrayList<Patient> lp = null;
         em.getTransaction().begin();        
         try
@@ -72,15 +75,18 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
         finally
         {
             em.close();
+            emf.close();
         }          
         
         return lp;
     }
 
     @Override
-    public boolean AjouterPatient(String nom, String prenom, String login)
+    public int AjouterPatient(String nom, String prenom, String login)
     {
-        boolean error = false;
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();        
+        int error = 0;
         
         em.getTransaction().begin();
         
@@ -99,61 +105,94 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
         {
             e.printStackTrace();
             em.getTransaction().rollback();
-            error = true;
+            error = 1;
         }
         finally
         {
             em.close();
+            emf.close();
         }
         
         return error;
     }
     @Override
-    public boolean AjouterPatient(Patient p)
+    public int AjouterPatient(Patient p)
     {
-        boolean error = false;
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();        
+        int error = 0;
         
         em.getTransaction().begin();
         
         try
         {
-            if(em.contains(p))
+            if(em.createNamedQuery("Patient.findByLogin").setParameter("login", p.getLogin()).getMaxResults() > 0)
             {
-                System.out.println("Contient");
+                error = 2;
             }
             else
             {
                 em.persist(p);            
                 em.getTransaction().commit();
-                error = !em.contains(p);
+                if(!em.contains(p))
+                    error = 3;
             }
         }
         catch(Exception e)
         {
             e.printStackTrace();
             //em.getTransaction().rollback();
-            error = true;
+            error = 1;
         }
         finally
         {
             em.close();
+            emf.close();
         }
         
         return error;
     }
 
     @Override
-    public void ModifierPatient(int idPatient)
-    {
-        Patient p = getPatient(idPatient);
+    public void ModifierPatient(Patient p)
+    {        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
         
-        // Modifier mais comment ?
+        em.getTransaction().begin();
         
+        try
+        {         
+            Query query = em.createQuery("UPDATE Patient SET nom = :nom, prenom = :prenom, login = :login WHERE idPatient = :idPatient");
+            query.setParameter("nom", p.getNom());
+            query.setParameter("prenom", p.getPrenom());
+            query.setParameter("login", p.getLogin());
+            query.setParameter("idPatient", p.getIdPatient());
+            query.executeUpdate();            
+            em.getTransaction().commit();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            try
+            {
+                em.getTransaction().rollback();
+            }
+            catch(Exception ex) {}
+        }
+        finally
+        {
+            em.close();
+            emf.close();
+        }        
     }
     
     @Override
     public Patient getPatient(int idPatient)
     {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
+        
         em.getTransaction().begin();
         Patient p = null;
         try
@@ -167,6 +206,7 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
         finally
         {
             em.close();
+            emf.close();
         }
         
         return p;

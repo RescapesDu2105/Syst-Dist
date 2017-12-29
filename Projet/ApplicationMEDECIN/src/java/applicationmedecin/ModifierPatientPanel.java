@@ -14,22 +14,25 @@ import javax.swing.JPanel;
  *
  * @author Philippe
  */
-public class ModifierPatientForm extends javax.swing.JFrame
+public class ModifierPatientPanel extends javax.swing.JPanel
 {
     @EJB
     private static SessionBeanPatientRemote EJBPatients;
+    private final MedecinForm medecinForm;
     private final JPanel jPanel;
     private final Patient patient;
     
     /**
      * Creates new form AjouterPatientForm
      * @param EJBPatients
+     * @param medecinForm
      * @param jPanel
      * @param patient
      */
-    public ModifierPatientForm(SessionBeanPatientRemote EJBPatients, JPanel jPanel, Patient patient)
+    public ModifierPatientPanel(SessionBeanPatientRemote EJBPatients, MedecinForm medecinForm, JPanel jPanel, Patient patient)
     {
-        ModifierPatientForm.EJBPatients = EJBPatients;
+        ModifierPatientPanel.EJBPatients = EJBPatients;
+        this.medecinForm = medecinForm;
         this.patient = patient;
         this.jPanel = jPanel;
         
@@ -50,24 +53,17 @@ public class ModifierPatientForm extends javax.swing.JFrame
     private void initComponents()
     {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jTF_Nom = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jTF_Prenom = new javax.swing.JTextField();
         jTF_Login = new javax.swing.JTextField();
         jButton_Modifier = new javax.swing.JButton();
         jButton_Annuler = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jTF_Nom = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setText("Nom :");
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel2.setText("Modifier le patient");
-
-        jLabel3.setText("Prénom :");
+        setPreferredSize(new java.awt.Dimension(614, 393));
 
         jLabel4.setText("Login :");
 
@@ -89,12 +85,19 @@ public class ModifierPatientForm extends javax.swing.JFrame
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
+        jLabel1.setText("Nom :");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel2.setText("Modifier le patient");
+
+        jLabel3.setText("Prénom :");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(80, Short.MAX_VALUE)
+                .addContainerGap(185, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton_Annuler)
@@ -108,21 +111,21 @@ public class ModifierPatientForm extends javax.swing.JFrame
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTF_Nom, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                            .addComponent(jTF_Nom)
                             .addComponent(jTF_Login)
-                            .addComponent(jTF_Prenom))))
-                .addGap(80, 80, 80))
+                            .addComponent(jTF_Prenom, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(184, 184, 184))
             .addGroup(layout.createSequentialGroup()
-                .addGap(110, 110, 110)
+                .addGap(215, 215, 215)
                 .addComponent(jLabel2)
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(30, 30, 30)
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addGap(84, 84, 84)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jTF_Nom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -138,17 +141,9 @@ public class ModifierPatientForm extends javax.swing.JFrame
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton_Modifier)
                     .addComponent(jButton_Annuler))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton_AnnulerActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_AnnulerActionPerformed
-    {//GEN-HEADEREND:event_jButton_AnnulerActionPerformed
-        jPanel.removeAll();
-        jPanel.repaint();
-    }//GEN-LAST:event_jButton_AnnulerActionPerformed
 
     private void jButton_ModifierActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_ModifierActionPerformed
     {//GEN-HEADEREND:event_jButton_ModifierActionPerformed
@@ -156,13 +151,25 @@ public class ModifierPatientForm extends javax.swing.JFrame
         updatedPatient.setIdPatient(patient.getIdPatient());
         updatedPatient.setNom(jTF_Nom.getText());
         updatedPatient.setPrenom(jTF_Prenom.getText());
-        updatedPatient.setLogin(jTF_Login.getText());        
-        
+        updatedPatient.setLogin(jTF_Login.getText());
+
         EJBPatients.ModifierPatient(updatedPatient);
+
+        medecinForm.jButton_Modifier.setEnabled(true);
+        medecinForm.jButton_Prescrire.setEnabled(true);
+        medecinForm.jButton_Consulter.setEnabled(true);
+        medecinForm.jButton_Quitter.setEnabled(true);
         
         jPanel.removeAll();
         jPanel.repaint();
     }//GEN-LAST:event_jButton_ModifierActionPerformed
+
+    private void jButton_AnnulerActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_AnnulerActionPerformed
+    {//GEN-HEADEREND:event_jButton_AnnulerActionPerformed
+        jPanel.removeAll();
+        jPanel.repaint();
+    }//GEN-LAST:event_jButton_AnnulerActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_Annuler;

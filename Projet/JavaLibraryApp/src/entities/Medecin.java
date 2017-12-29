@@ -145,7 +145,7 @@ public class Medecin implements Serializable
     @Override
     public String toString()
     {
-        return "entities.Medecin[ idMedecin=" + idMedecin + " ]";
+        return this.getNom() + " " + this.getPrenom();
     }
     
 }
