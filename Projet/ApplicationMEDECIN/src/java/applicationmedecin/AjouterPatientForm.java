@@ -163,10 +163,7 @@ public class AjouterPatientForm extends javax.swing.JFrame
             JOptionPane.showMessageDialog(this, "Des champs n'ont pas été complétés !", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
         else
-        {
-            frame.dispose();
-            this.dispose();
-            
+        {   
             Patient p = new Patient();
             p.setNom(jTF_Nom.getText());
             p.setPrenom(jTF_Prenom.getText());
@@ -181,13 +178,13 @@ public class AjouterPatientForm extends javax.swing.JFrame
                     break;
                 case 2:                    
                     JOptionPane.showMessageDialog(this, "Le login est déjà utilisé !", "Erreur", JOptionPane.ERROR_MESSAGE);
-                    System.exit(1);
                     break;
                 case 3:                     
                     JOptionPane.showMessageDialog(this, "Le patient n'a pas bien été inséré !", "Erreur", JOptionPane.ERROR_MESSAGE);
-                    System.exit(1);
                     break;
                 default:                    
+                    frame.dispose();
+                    this.dispose();
                     new MedecinForm(EJBAnalyses, EJBPatients, medecin, p).setVisible(true);
                     break;
             }

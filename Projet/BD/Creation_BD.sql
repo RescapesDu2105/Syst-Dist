@@ -18,7 +18,7 @@ CREATE TABLE `bd_systdist`.`medecin` (
   PRIMARY KEY (`idMedecin`));
 
 CREATE TABLE `bd_systdist`.`demande` (
-  `idDemande` INT NOT NULL,
+  `idDemande` INT NOT NULL AUTO_INCREMENT,
   `RefPatient` INT NULL,
   `RefMedecin` INT NULL,
   `DateHeureDemande` DATETIME NULL,
@@ -30,13 +30,16 @@ CREATE TABLE `bd_systdist`.`demande` (
 	REFERENCES Medecin(idMedecin));
 
 CREATE TABLE `bd_systdist`.`analyses` (
-  `idAnalyses` INT NOT NULL,
+  `idAnalyses` INT NOT NULL AUTO_INCREMENT,
   `Item` VARCHAR(45) NULL,
   `Valeur` VARCHAR(45) NULL,
-  PRIMARY KEY (`idAnalyses`));
+  `idDemande` INT NOT NULL,
+  PRIMARY KEY (`idAnalyses`),
+  CONSTRAINT analyses_demande_ref FOREIGN KEY(idDemande)
+	REFERENCES Demande(idDemande));
 
 CREATE TABLE `bd_systdist`.`logs` (
-  `idLogs` INT NOT NULL,
+  `idLogs` INT NOT NULL AUTO_INCREMENT,
   `Infos` VARCHAR(45) NULL,
   PRIMARY KEY (`idLogs`));
 
@@ -45,9 +48,5 @@ INSERT INTO bd_systdist.medecin VALUES('1', 'Dimartino', 'Philippe', 'philippedi
 
 INSERT INTO bd_systdist.patient VALUES('1', 'Serrhini', 'Souad', 'sousou');
 INSERT INTO bd_systdist.patient VALUES('2', 'Serrhini', 'Souad', 'sousou2');
+
 COMMIT;
-
-SELECT * FROM bd_systdist.medecin;
-SELECT * FROM bd_systdist.patient;
-
-SELECT * FROM Medecin m WHERE login = 'philippedimartino';

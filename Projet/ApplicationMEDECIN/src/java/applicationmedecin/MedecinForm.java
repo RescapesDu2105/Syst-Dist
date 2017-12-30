@@ -121,8 +121,8 @@ public class MedecinForm extends javax.swing.JFrame
                 .addComponent(jButton_Modifier, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton_Prescrire, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton_Consulter, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton_Consulter, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton_Quitter, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(layout.createSequentialGroup()
@@ -164,6 +164,10 @@ public class MedecinForm extends javax.swing.JFrame
         jButton_Prescrire.setEnabled(false);
         jButton_Consulter.setEnabled(false);
         jButton_Quitter.setEnabled(false);
+        
+        jPanel.removeAll();
+        jPanel.add(new PrescriptionPanel(EJBAnalyses, EJBPatients, medecin, patient, this)); 
+        this.revalidate();
     }//GEN-LAST:event_jButton_PrescrireActionPerformed
 
     private void jButton_ConsulterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_ConsulterActionPerformed
@@ -189,6 +193,6 @@ public class MedecinForm extends javax.swing.JFrame
     public javax.swing.JButton jButton_Modifier;
     public javax.swing.JButton jButton_Prescrire;
     public javax.swing.JButton jButton_Quitter;
-    private javax.swing.JPanel jPanel;
+    public javax.swing.JPanel jPanel;
     // End of variables declaration//GEN-END:variables
 }

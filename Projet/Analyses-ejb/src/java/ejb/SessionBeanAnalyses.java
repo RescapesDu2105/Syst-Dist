@@ -5,9 +5,15 @@
  */
 package ejb;
 
+import entities.Analyses;
+import entities.Demande;
 import entities.Medecin;
+import entities.Patient;
 import interfaces.SessionBeanAnalysesRemote;
 import java.security.Principal;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
@@ -16,6 +22,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  *
@@ -58,6 +65,7 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
     {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
         EntityManager em = emf.createEntityManager();
+        
         em.getTransaction().begin();
         Medecin m = null;
         try
@@ -78,5 +86,68 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         
         return m;
     }
-    
+        
+    @Override
+    public ArrayList<Analyses> getAnalyses()
+    {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
+        
+        em.getTransaction().begin();
+        ArrayList<Analyses> analyses = null;
+        try
+        {
+            analyses = new ArrayList<>(em.createNamedQuery("Analyses.findAll").getResultList());
+            System.out.println("analyses = " + analyses.size());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            em.close();
+            emf.close();
+        }
+        
+        return analyses;
+    }
+
+    @Override
+    public int PrescrireDemande(Medecin medecin, Patient patient, boolean urgent, ArrayList<String> analyses)
+    {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
+        int DemandeId = -1;
+        
+        em.getTransaction().begin();
+        try
+        {
+            Analyses a = new Analyses();
+            
+            
+            Demande d = new Demande();
+            d.setRefMedecin(medecin);
+            d.setRefPatient(patient);
+            d.setDateHeureDemande(new Timestamp(System.currentTimeMillis()));
+            d.setUrgent(urgent == true ? 1 : 0);
+            em.persist(d);             
+            DemandeId = (int) em.createQuery("SELECT LAST_INSERT_ID() FROM bd_systdist.demande").getSingleResult();
+            em.getTransaction().commit();
+            //Envoi sur la QUEUE
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            
+            em.getTransaction().rollback(); 
+        }
+        finally
+        {
+            em.close();
+            emf.close();
+        }
+        
+        return DemandeId;
+    }
 }

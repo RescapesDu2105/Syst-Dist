@@ -28,8 +28,8 @@
               <Component id="jButton_Modifier" min="-2" pref="154" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButton_Prescrire" min="-2" pref="188" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="jButton_Consulter" min="-2" pref="154" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jButton_Consulter" pref="191" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButton_Quitter" min="-2" pref="154" max="-2" attributes="0"/>
           </Group>
@@ -102,6 +102,9 @@
       </AuxValues>
     </Component>
     <Container class="javax.swing.JPanel" name="jPanel">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
+      </AuxValues>
 
       <Layout>
         <DimensionLayout dim="0">

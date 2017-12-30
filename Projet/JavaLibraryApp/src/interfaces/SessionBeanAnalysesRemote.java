@@ -5,8 +5,11 @@
  */
 package interfaces;
 
+import entities.Analyses;
 import entities.Medecin;
+import entities.Patient;
 import java.security.Principal;
+import java.util.ArrayList;
 import javax.ejb.Remote;
 
 /**
@@ -19,4 +22,6 @@ public interface SessionBeanAnalysesRemote
     public Principal Authentification();
     //public Medecin Authentification();
     public Medecin getMedecinByLogin(String login);
+    public ArrayList<Analyses> getAnalyses();
+    public int PrescrireDemande(Medecin medecin, Patient patient, boolean urgent, ArrayList<String> analyses);
 }

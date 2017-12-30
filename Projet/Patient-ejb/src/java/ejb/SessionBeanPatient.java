@@ -126,8 +126,9 @@ public class SessionBeanPatient implements SessionBeanPatientRemote
         
         try
         {
-            if(em.createNamedQuery("Patient.findByLogin").setParameter("login", p.getLogin()).getMaxResults() > 0)
+            if(em.createNamedQuery("Patient.findByLogin").setParameter("login", p.getLogin()).getResultList().size() > 0)
             {
+                System.out.println("count " + em.createNamedQuery("Patient.findByLogin").setParameter("login", p.getLogin()).getMaxResults());
                 error = 2;
             }
             else
