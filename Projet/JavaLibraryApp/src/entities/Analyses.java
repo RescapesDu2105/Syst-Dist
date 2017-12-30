@@ -12,10 +12,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -48,6 +49,9 @@ public class Analyses implements Serializable
     @Size(max = 45)
     @Column(name = "Valeur")
     private String valeur;
+    @JoinColumn(name = "idDemande", referencedColumnName = "idDemande")
+    @ManyToOne(optional = false)
+    private Demande idDemande;
 
     public Analyses()
     {
@@ -86,6 +90,16 @@ public class Analyses implements Serializable
     public void setValeur(String valeur)
     {
         this.valeur = valeur;
+    }
+
+    public Demande getIdDemande()
+    {
+        return idDemande;
+    }
+
+    public void setIdDemande(Demande idDemande)
+    {
+        this.idDemande = idDemande;
     }
 
     @Override

@@ -1,11 +1,9 @@
-package entities;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+package entities;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -19,7 +17,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -38,7 +35,6 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Patient.findByLogin", query = "SELECT p FROM Patient p WHERE p.login = :login")
     , @NamedQuery(name = "Patient.findByNomPrenom", query = "SELECT p FROM Patient p WHERE UPPER(p.nom) = UPPER(:nom) AND UPPER(p.prenom) = UPPER(:prenom)")    
     //, @NamedQuery(name = "Patient.update", query = "UPDATE Patient SET nom = :nom, SET prenom = :prenom, SET login = :login WHERE idPatient = :idPatient")
-        
 })
 public class Patient implements Serializable
 {
@@ -49,28 +45,21 @@ public class Patient implements Serializable
     @Basic(optional = false)
     @Column(name = "idPatient")
     private Integer idPatient;
-    @Size(max = 255)
-    @Column(name = "Login")
-    private String login;
-    @Size(max = 255)
+    @Size(max = 45)
     @Column(name = "Nom")
     private String nom;
-    @Size(max = 255)
+    @Size(max = 45)
     @Column(name = "Prenom")
     private String prenom;
+    @Size(max = 45)
+    @Column(name = "Login")
+    private String login;
     @OneToMany(mappedBy = "refPatient")
     private Collection<Demande> demandeCollection;
 
     public Patient()
     {
     }
-    
-    /*public Patient(String nom, String prenom, String login)
-    {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.login = login;
-    }*/
 
     public Patient(Integer idPatient)
     {
@@ -85,16 +74,6 @@ public class Patient implements Serializable
     public void setIdPatient(Integer idPatient)
     {
         this.idPatient = idPatient;
-    }
-
-    public String getLogin()
-    {
-        return login;
-    }
-
-    public void setLogin(String login)
-    {
-        this.login = login;
     }
 
     public String getNom()
@@ -115,6 +94,16 @@ public class Patient implements Serializable
     public void setPrenom(String prenom)
     {
         this.prenom = prenom;
+    }
+
+    public String getLogin()
+    {
+        return login;
+    }
+
+    public void setLogin(String login)
+    {
+        this.login = login;
     }
 
     @XmlTransient

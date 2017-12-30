@@ -6,8 +6,10 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,11 +19,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -51,6 +54,8 @@ public class Demande implements Serializable
     private Date dateHeureDemande;
     @Column(name = "Urgent")
     private Integer urgent;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDemande")
+    private Collection<Analyses> analysesCollection;
     @JoinColumn(name = "RefMedecin", referencedColumnName = "idMedecin")
     @ManyToOne
     private Medecin refMedecin;
@@ -95,6 +100,17 @@ public class Demande implements Serializable
     public void setUrgent(Integer urgent)
     {
         this.urgent = urgent;
+    }
+
+    @XmlTransient
+    public Collection<Analyses> getAnalysesCollection()
+    {
+        return analysesCollection;
+    }
+
+    public void setAnalysesCollection(Collection<Analyses> analysesCollection)
+    {
+        this.analysesCollection = analysesCollection;
     }
 
     public Medecin getRefMedecin()

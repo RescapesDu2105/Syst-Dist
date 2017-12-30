@@ -11,6 +11,7 @@ import interfaces.SessionBeanAnalysesRemote;
 import interfaces.SessionBeanPatientRemote;
 import java.awt.CardLayout;
 import javax.ejb.EJB;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -180,10 +181,19 @@ public class MedecinForm extends javax.swing.JFrame
 
     private void jButton_QuitterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_QuitterActionPerformed
     {//GEN-HEADEREND:event_jButton_QuitterActionPerformed
-        jButton_Prescrire.setEnabled(false);
-        jButton_Consulter.setEnabled(false);
-        jButton_Modifier.setEnabled(false);
-        jButton_Quitter.setEnabled(false);
+        String[] options = new String[] {"Annuler", "Changer de patient", "Quitter"};
+        int Choix = JOptionPane.showOptionDialog(null, "Que souhaitez-vous faire ?", "Que faire ?", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+        
+        if(Choix == 1)
+        {
+            this.dispose();            
+            new EntrerPatientForm(EJBAnalyses, EJBPatients, medecin).setVisible(true);
+        }
+        else if(Choix == 2)
+        {
+            this.dispose();
+            System.exit(0);
+        }
     }//GEN-LAST:event_jButton_QuitterActionPerformed
 
     

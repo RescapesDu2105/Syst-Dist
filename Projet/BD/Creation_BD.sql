@@ -47,6 +47,5 @@ CREATE TABLE `bd_systdist`.`logs` (
 INSERT INTO bd_systdist.medecin VALUES('1', 'Dimartino', 'Philippe', 'philippedimartino');
 
 INSERT INTO bd_systdist.patient VALUES('1', 'Serrhini', 'Souad', 'sousou');
-INSERT INTO bd_systdist.patient VALUES('2', 'Serrhini', 'Souad', 'sousou2');
 
 COMMIT;

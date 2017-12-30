@@ -10,7 +10,6 @@ import interfaces.SessionBeanAnalysesRemote;
 import interfaces.SessionBeanPatientRemote;
 import java.security.Principal;
 import javax.ejb.EJB;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,20 +28,16 @@ public class Main
     public static void main(String[] args)
     {
         try
-        {
-            //System.out.println("Patients 3 = " + EJBPatients.ChercherPatient("Serrhini", "Souad"));
+        {           
             Principal principal = EJBAnalyses.Authentification();
-            //System.out.println("principal = " + principal.getName());
             Medecin medecin = EJBAnalyses.getMedecinByLogin(principal.getName());
             
-            //Medecin medecin = EJBAnalyses.Authentification();
-            //System.out.println("medecin = " + medecin);
 
             if(medecin == null)
             {
                 //Erreur
                 //JOptionPane.showMessageDialog(this, "Le nom d'utilisateur et/ou le mot de passe est incorrect !", "Erreur", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Erreur de login");
+                System.err.println("Erreur de login 1");
                 //System.exit(1);
             }
             else
@@ -52,7 +47,7 @@ public class Main
         }
         catch (Exception ex) 
         {
-            ex.printStackTrace();
+            System.err.println("Erreur de login 2");
         }
     }
     

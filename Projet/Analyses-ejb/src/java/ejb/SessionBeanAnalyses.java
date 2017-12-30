@@ -11,7 +11,6 @@ import entities.Medecin;
 import entities.Patient;
 import interfaces.SessionBeanAnalysesRemote;
 import java.security.Principal;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import javax.annotation.Resource;
@@ -19,37 +18,44 @@ import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.jms.JMSConnectionFactory;
+import javax.jms.JMSContext;
+import javax.jms.ObjectMessage;
+import javax.jms.Queue;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 
 /**
  *
  * @author Philippe
  */
 @Stateless
-@DeclareRoles("Medecins")//, "Laborantins", "asadmin"})
+@DeclareRoles({"Medecin", "Laborantin"})
 public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
 {
+
+    @Resource(mappedName = "jms/myQueue")
+    private Queue myQueue;
+
+    @Inject
+    @JMSConnectionFactory("myQueueFactory")
+    private JMSContext context;
     @Resource SessionContext sessionContext; 
     @Override
-    @RolesAllowed("Medecins")//, "Laborantins", "asadmin"})
+    @RolesAllowed("Medecin")
     public Principal Authentification()
     {
         try
         {
             System.out.println("Authentification");
             System.out.println("ctx = " + sessionContext);
-            System.out.println("caller = " + sessionContext.getCallerPrincipal());
+            //System.out.println("caller = " + sessionContext.getCallerPrincipal());
             
-            if(sessionContext.isCallerInRole("Medecins"))
+            if(sessionContext.isCallerInRole("Medecin") || sessionContext.isCallerInRole("Laborantin"))
             {
-                Principal callerPrincipal = sessionContext.getCallerPrincipal();
-                if(callerPrincipal.getName().equals("philippedimartino"))
-                {
-                    return sessionContext.getCallerPrincipal();
-                }
+                return sessionContext.getCallerPrincipal();
             }
         }
         catch (Exception e)
@@ -122,25 +128,39 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         
         em.getTransaction().begin();
         try
-        {
-            Analyses a = new Analyses();
-            
-            
+        {                        
             Demande d = new Demande();
             d.setRefMedecin(medecin);
             d.setRefPatient(patient);
             d.setDateHeureDemande(new Timestamp(System.currentTimeMillis()));
             d.setUrgent(urgent == true ? 1 : 0);
             em.persist(d);             
-            DemandeId = (int) em.createQuery("SELECT LAST_INSERT_ID() FROM bd_systdist.demande").getSingleResult();
+            em.flush();
+            DemandeId = d.getIdDemande();
+            for(String s : analyses)
+            {                
+                Analyses a = new Analyses();
+                a.setIdDemande(d);
+                a.setItem(s);
+                em.persist(a);
+            }
             em.getTransaction().commit();
-            //Envoi sur la QUEUE
+            
+            ObjectMessage om = context.createObjectMessage();
+            om.setObject(d);
+            om.setBooleanProperty("Demande", true);
+            
+            context.createProducer().send(myQueue, om);
         }
         catch(Exception e)
         {
             e.printStackTrace();
             
-            em.getTransaction().rollback(); 
+            try
+            {            
+                em.getTransaction().rollback(); 
+            }
+            catch(Exception ex) {}
         }
         finally
         {
@@ -149,5 +169,10 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         }
         
         return DemandeId;
+    }
+
+    private void sendJMSMessageToMyQueue(String messageData)
+    {
+        context.createProducer().send(myQueue, messageData);
     }
 }

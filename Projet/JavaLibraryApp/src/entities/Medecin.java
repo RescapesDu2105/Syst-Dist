@@ -1,11 +1,9 @@
-package entities;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+package entities;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -33,9 +31,9 @@ import javax.xml.bind.annotation.XmlTransient;
 {
     @NamedQuery(name = "Medecin.findAll", query = "SELECT m FROM Medecin m")
     , @NamedQuery(name = "Medecin.findByIdMedecin", query = "SELECT m FROM Medecin m WHERE m.idMedecin = :idMedecin")
-    , @NamedQuery(name = "Medecin.findByLogin", query = "SELECT m FROM Medecin m WHERE m.login = :login")
     , @NamedQuery(name = "Medecin.findByNom", query = "SELECT m FROM Medecin m WHERE m.nom = :nom")
     , @NamedQuery(name = "Medecin.findByPrenom", query = "SELECT m FROM Medecin m WHERE m.prenom = :prenom")
+    , @NamedQuery(name = "Medecin.findByLogin", query = "SELECT m FROM Medecin m WHERE m.login = :login")
 })
 public class Medecin implements Serializable
 {
@@ -46,15 +44,15 @@ public class Medecin implements Serializable
     @NotNull
     @Column(name = "idMedecin")
     private Integer idMedecin;
-    @Size(max = 255)
-    @Column(name = "Login")
-    private String login;
-    @Size(max = 255)
+    @Size(max = 45)
     @Column(name = "Nom")
     private String nom;
-    @Size(max = 255)
+    @Size(max = 45)
     @Column(name = "Prenom")
     private String prenom;
+    @Size(max = 45)
+    @Column(name = "Login")
+    private String login;
     @OneToMany(mappedBy = "refMedecin")
     private Collection<Demande> demandeCollection;
 
@@ -77,16 +75,6 @@ public class Medecin implements Serializable
         this.idMedecin = idMedecin;
     }
 
-    public String getLogin()
-    {
-        return login;
-    }
-
-    public void setLogin(String login)
-    {
-        this.login = login;
-    }
-
     public String getNom()
     {
         return nom;
@@ -105,6 +93,16 @@ public class Medecin implements Serializable
     public void setPrenom(String prenom)
     {
         this.prenom = prenom;
+    }
+
+    public String getLogin()
+    {
+        return login;
+    }
+
+    public void setLogin(String login)
+    {
+        this.login = login;
     }
 
     @XmlTransient
