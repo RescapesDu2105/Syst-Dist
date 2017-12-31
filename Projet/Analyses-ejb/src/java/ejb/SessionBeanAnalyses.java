@@ -40,12 +40,13 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
     private Queue myQueue;
 
     @Inject
-    @JMSConnectionFactory("myQueueFactory")
+    @JMSConnectionFactory("jms/myQueueFactory")
     private JMSContext context;
     @Resource SessionContext sessionContext; 
+    
     @Override
     @RolesAllowed("Medecin")
-    public Principal Authentification()
+    public Principal AuthentificationMedecin()
     {
         try
         {
@@ -53,7 +54,30 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
             System.out.println("ctx = " + sessionContext);
             //System.out.println("caller = " + sessionContext.getCallerPrincipal());
             
-            if(sessionContext.isCallerInRole("Medecin") || sessionContext.isCallerInRole("Laborantin"))
+            if(sessionContext.isCallerInRole("Medecin"))
+            {
+                return sessionContext.getCallerPrincipal();
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    @Override
+    @RolesAllowed("Laborantin")
+    public Principal AuthentificationLaborantin()
+    {
+        try
+        {
+            System.out.println("Authentification");
+            System.out.println("ctx = " + sessionContext);
+            //System.out.println("caller = " + sessionContext.getCallerPrincipal());
+            
+            if(sessionContext.isCallerInRole("Laborantin"))
             {
                 return sessionContext.getCallerPrincipal();
             }
@@ -105,6 +129,32 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         {
             analyses = new ArrayList<>(em.createNamedQuery("Analyses.findAll").getResultList());
             System.out.println("analyses = " + analyses.size());
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            em.close();
+            emf.close();
+        }
+        
+        return analyses;
+    }
+    
+    @Override
+    public ArrayList<Analyses> getAnalysesByDemande(int idDemande)
+    {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
+        
+        em.getTransaction().begin();
+        ArrayList<Analyses> analyses = null;
+        try
+        {
+            analyses = new ArrayList<>(em.createNamedQuery("Analyses.findByIdDemande").setParameter("idDemande", idDemande).getResultList());
+            //System.out.println("analyses = " + analyses.size());
         }
         catch(Exception e)
         {

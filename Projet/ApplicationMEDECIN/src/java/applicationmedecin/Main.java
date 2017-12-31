@@ -29,7 +29,7 @@ public class Main
     {
         try
         {           
-            Principal principal = EJBAnalyses.Authentification();
+            Principal principal = EJBAnalyses.AuthentificationMedecin();
             Medecin medecin = EJBAnalyses.getMedecinByLogin(principal.getName());
             
 

@@ -35,9 +35,9 @@ public class Main
     private static Connection connectionQueue = null;
     private static Session sessionQueue = null;
     
-    @Resource(mappedName = "jms/myTestTopic")
+    @Resource(mappedName = "jms/myTopic")
     private static Topic myTopic;
-    @Resource(mappedName = "jms/myTestTopicFactory")
+    @Resource(mappedName = "jms/myTopicFactory")
     private static ConnectionFactory myTopicFactory;
     private static Connection connectionTopic = null;
     private static Session sessionTopic = null;
@@ -51,7 +51,7 @@ public class Main
     {
         try
         {
-            Principal principal = EJBAnalyses.Authentification();
+            Principal principal = EJBAnalyses.AuthentificationLaborantin();
 
             if(principal == null)
             {

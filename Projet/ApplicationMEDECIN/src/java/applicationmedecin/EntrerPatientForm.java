@@ -164,6 +164,7 @@ public class EntrerPatientForm extends javax.swing.JFrame
                 JOptionPane.showMessageDialog(this, "Aucun patient trouvé !", "Erreur", JOptionPane.ERROR_MESSAGE);
                 break;
             case 1:
+                this.dispose();
                 new MedecinForm(EJBAnalyses, EJBPatients, medecin, (Patient) Patients.get(0)).setVisible(true);
                 break;
             default:

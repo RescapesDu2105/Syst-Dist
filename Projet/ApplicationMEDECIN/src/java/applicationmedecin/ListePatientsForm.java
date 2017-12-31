@@ -31,21 +31,12 @@ public class ListePatientsForm extends javax.swing.JFrame
 
     /**
      * Creates new form GestionPatientsForm
+     * @param EJBAnalyses
      * @param mainFrame
+     * @param EJBPatients
+     * @param Patients
+     * @param medecin
      */
-    public ListePatientsForm(EntrerPatientForm mainFrame)
-    {
-        ListePatientsForm.EJBAnalyses = null;
-        ListePatientsForm.EJBPatients = null;  
-        this.medecin = null;
-        this.mainFrame = mainFrame;
-        this.Patients = null;
-        
-        initComponents();
-        setLocationRelativeTo(null);
-        
-        ChargerListePatients();
-    }
     
     public ListePatientsForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, EntrerPatientForm mainFrame, Medecin medecin, List Patients)
     {
@@ -229,13 +220,6 @@ public class ListePatientsForm extends javax.swing.JFrame
         }
     }//GEN-LAST:event_jTablePatientsMouseClicked
 
-    private void ChargerListePatients()
-    {        
-        //ArrayList<Patient> lp = EJBPatients.getPatients();
-        
-        //DefaultTableModel dlm = (DefaultTableModel) jTablePatients.getModel();
-        //dlm.addRow(lp.toArray());
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_Annuler;

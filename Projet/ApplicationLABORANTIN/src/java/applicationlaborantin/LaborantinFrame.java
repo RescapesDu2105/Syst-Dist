@@ -5,8 +5,12 @@
  */
 package applicationlaborantin;
 
+import entities.Analyses;
 import entities.Demande;
 import interfaces.SessionBeanAnalysesRemote;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.jms.Connection;
 import javax.jms.JMSException;
@@ -42,6 +46,8 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
     
     private MessageProducer producerT = null;
     private MessageConsumer consumerT = null;
+    
+    private TraiterFrame traiterFrame = null;
     
     /**
      * Creates new form LaborantinFrame
@@ -99,7 +105,8 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
                 jButton_Traiter.setEnabled(true);
 
                 Demande d = (Demande) om.getObject();
-                
+                ArrayList<Analyses> analyses = EJBAnalyses.getAnalysesByDemande(d.getIdDemande());
+                traiterFrame = new TraiterFrame(analyses);                
             }
         } 
         catch (JMSException ex) 
@@ -122,9 +129,17 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
         jButton_Quitter = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter()
+        {
+            public void windowClosing(java.awt.event.WindowEvent evt)
+            {
+                formWindowClosing(evt);
+            }
+        });
 
         jButton_Traiter.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jButton_Traiter.setText("Traiter la demande");
+        jButton_Traiter.setEnabled(false);
         jButton_Traiter.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -134,6 +149,13 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
         });
 
         jButton_Quitter.setText("Quitter");
+        jButton_Quitter.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton_QuitterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -161,7 +183,38 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
     private void jButton_TraiterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_TraiterActionPerformed
     {//GEN-HEADEREND:event_jButton_TraiterActionPerformed
         jButton_Traiter.setEnabled(false);
+        traiterFrame.setVisible(true);
     }//GEN-LAST:event_jButton_TraiterActionPerformed
+
+    private void jButton_QuitterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_QuitterActionPerformed
+    {//GEN-HEADEREND:event_jButton_QuitterActionPerformed
+        try
+        {
+            connectionQ.close();
+            connectionT.close();
+        }
+        catch (JMSException ex)
+        {
+            Logger.getLogger(LaborantinFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.dispose();
+        System.exit(0);
+    }//GEN-LAST:event_jButton_QuitterActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt)//GEN-FIRST:event_formWindowClosing
+    {//GEN-HEADEREND:event_formWindowClosing
+        try
+        {
+            connectionQ.close();
+            connectionT.close();
+        }
+        catch (JMSException ex)
+        {
+            Logger.getLogger(LaborantinFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.dispose();
+        System.exit(0);
+    }//GEN-LAST:event_formWindowClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

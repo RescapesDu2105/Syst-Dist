@@ -19,9 +19,11 @@ import javax.ejb.Remote;
 @Remote
 public interface SessionBeanAnalysesRemote
 {
-    public Principal Authentification();
+    public Principal AuthentificationMedecin();
+    public Principal AuthentificationLaborantin();
     //public Medecin Authentification();
     public Medecin getMedecinByLogin(String login);
     public ArrayList<Analyses> getAnalyses();
+    public ArrayList<Analyses> getAnalysesByDemande(int idDemande);
     public int PrescrireDemande(Medecin medecin, Patient patient, boolean urgent, ArrayList<String> analyses);
 }
