@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package applicationmedecin;
+package applicationpatient;
 
-import entities.Analyses;
+import ws.Analyses;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,8 +26,7 @@ public class AfficherAnalysesFrame extends javax.swing.JFrame
         
         DefaultTableModel dtm = (DefaultTableModel) jTable.getModel();
         
-        jLabel.setText("Référence de la demande : " + analyses.get(0).getDemande().getIdDemande());
-        //System.out.println("analyses = " + analyses.size());
+        jLabel.setText("RÃ©fÃ©rence de la demande : " + idDemande);
         analyses.forEach((a) ->
         {
             Object[] obj = new Object[2];
@@ -51,6 +50,7 @@ public class AfficherAnalysesFrame extends javax.swing.JFrame
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
         jLabel = new javax.swing.JLabel();
+        jButton_Payer = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -97,6 +97,8 @@ public class AfficherAnalysesFrame extends javax.swing.JFrame
 
         jLabel.setText("jLabel1");
 
+        jButton_Payer.setText("Payer");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,24 +109,28 @@ public class AfficherAnalysesFrame extends javax.swing.JFrame
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addComponent(jButton_Fermer)
-                        .addGap(0, 72, Short.MAX_VALUE)))
+                        .addGap(19, 19, 19)
+                        .addComponent(jLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(42, 42, 42)
+                .addComponent(jButton_Fermer)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton_Payer)
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(11, 11, 11)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton_Fermer)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton_Fermer)
+                    .addComponent(jButton_Payer))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -138,6 +144,7 @@ public class AfficherAnalysesFrame extends javax.swing.JFrame
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_Fermer;
+    private javax.swing.JButton jButton_Payer;
     private javax.swing.JLabel jLabel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;

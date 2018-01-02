@@ -8,7 +8,9 @@ package applicationlaborantin;
 import entities.Analyses;
 import entities.Demande;
 import interfaces.SessionBeanAnalysesRemote;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -27,6 +29,7 @@ public class TraiterFrame extends javax.swing.JFrame
     private static SessionBeanAnalysesRemote EJBAnalyses;
     private final Demande demande;
     private final ArrayList<Analyses> analyses;
+    private final Date dateDebut;
     /**
      * Creates new form TraiterFrame
      * @param EJBAnalyses
@@ -38,6 +41,7 @@ public class TraiterFrame extends javax.swing.JFrame
         TraiterFrame.EJBAnalyses = EJBAnalyses;
         this.demande = demande;
         this.analyses = analyses;
+        this.dateDebut = Date.from(Instant.now());
         
         initComponents();
         setLocationRelativeTo(null);
@@ -52,6 +56,7 @@ public class TraiterFrame extends javax.swing.JFrame
             obj[0] = a.getItem();
             dtm.addRow(obj);
         });
+        
     }
 
     /**
@@ -129,7 +134,7 @@ public class TraiterFrame extends javax.swing.JFrame
                         .addGap(0, 63, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(63, 63, 63)
+                .addGap(34, 34, 34)
                 .addComponent(jLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -139,7 +144,7 @@ public class TraiterFrame extends javax.swing.JFrame
                 .addContainerGap()
                 .addComponent(jLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton_Confirmer)
                 .addContainerGap())
@@ -164,7 +169,7 @@ public class TraiterFrame extends javax.swing.JFrame
                 analyses.get(i).setValeur((String) jTable.getModel().getValueAt(i, 1));
             }
             demande.setResultatsDisponibles(true);
-            EJBAnalyses.TraiterDemande(demande, analyses);
+            EJBAnalyses.TraiterDemande(demande, analyses, dateDebut, Date.from(Instant.now()));
             this.dispose();
         }
         else

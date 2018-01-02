@@ -13,6 +13,7 @@ import interfaces.SessionBeanAnalysesRemote;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
@@ -22,8 +23,10 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.JMSConnectionFactory;
 import javax.jms.JMSContext;
+import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
+import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -153,7 +156,7 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
     }
 
     @Override
-    public HashMap<Demande, ArrayList<Analyses>> getAllResultatsAnalyses()
+    public HashMap<Demande, ArrayList<Analyses>> getAllResultatsAnalysesByPatient(Patient patient, boolean urgent)
     {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
         EntityManager em = emf.createEntityManager();
@@ -163,7 +166,7 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         ArrayList<Demande> Demandes = null;
         try
         {
-            Demandes = new ArrayList<>(em.createNamedQuery("Demande.findByResultatsDisponibles").getResultList());
+            Demandes = new ArrayList<>(em.createNamedQuery("Demande.findByResultatsDisponibles").setParameter("patient", patient).setParameter("urgent", urgent).getResultList());
             for(Demande d : Demandes)
             {
                 Resultats.put(d, getAnalysesByDemande(d));
@@ -262,7 +265,7 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
     }
 
     @Override
-    public void TraiterDemande(Demande demande, ArrayList<Analyses> analyses)
+    public void TraiterDemande(Demande demande, ArrayList<Analyses> analyses, Date dateDebut, Date dateFin)
     {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
         EntityManager em = emf.createEntityManager();
@@ -289,6 +292,8 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
                 om.setObject(demande);
                 contextT.createProducer().send(myTopic, om);
             }
+            
+            log(demande.getIdDemande(), dateDebut, dateFin);
         }
         catch(Exception e)
         {
@@ -298,6 +303,26 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         {
             em.close();
             emf.close();
+        }
+    }
+    
+    private void log(int idDemande, Date dateDebut, Date dateFin) 
+    {
+        try
+        {
+            long diff = Math.abs(dateFin.getTime() - dateDebut.getTime());
+            long Heures = diff / (60 * 60 * 1000);
+            long Minutes = diff % (60 * 60 * 1000);
+            
+            TextMessage tm = contextT.createTextMessage();
+            tm.setText("La durée de traitement de l'analyse " + idDemande + " a été de " + Heures + "h" + Minutes + " min");
+            tm.setBooleanProperty("MDBlog", true);
+            
+            contextT.createProducer().send(myTopic, tm);
+        } 
+        catch (JMSException ex) 
+        {
+            ex.printStackTrace();
         }
     }
 }

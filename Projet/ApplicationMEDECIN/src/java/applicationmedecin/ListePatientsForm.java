@@ -12,6 +12,9 @@ import interfaces.SessionBeanAnalysesRemote;
 import interfaces.SessionBeanPatientRemote;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.jms.Connection;
+import javax.jms.Session;
+import javax.jms.Topic;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -27,7 +30,11 @@ public class ListePatientsForm extends javax.swing.JFrame
     private static SessionBeanPatientRemote EJBPatients;
     private final Medecin medecin;
     private final EntrerPatientForm mainFrame;
-    private final List Patients;
+    private final List Patients;    
+    
+    private final Topic topic;
+    private final Connection connection;
+    private final Session session;
 
     /**
      * Creates new form GestionPatientsForm
@@ -36,15 +43,22 @@ public class ListePatientsForm extends javax.swing.JFrame
      * @param EJBPatients
      * @param Patients
      * @param medecin
+     * @param topic
+     * @param connection
+     * @param session
      */
     
-    public ListePatientsForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, EntrerPatientForm mainFrame, Medecin medecin, List Patients)
+    public ListePatientsForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, EntrerPatientForm mainFrame, Medecin medecin, List Patients, Topic topic, Connection connection, Session session)
     {
         ListePatientsForm.EJBAnalyses = EJBAnalyses;
         ListePatientsForm.EJBPatients = EJBPatients;  
         this.medecin = medecin;
         this.Patients = Patients;
-        this.mainFrame = mainFrame;
+        this.mainFrame = mainFrame;        
+        
+        this.topic = topic;
+        this.connection = connection;
+        this.session = session;
         
         initComponents();
         setLocationRelativeTo(null);
@@ -198,7 +212,7 @@ public class ListePatientsForm extends javax.swing.JFrame
             this.dispose();
             mainFrame.dispose();
             
-            new MedecinForm(EJBAnalyses, EJBPatients, medecin, selectedPatient).setVisible(true);
+            new MedecinForm(EJBAnalyses, EJBPatients, medecin, selectedPatient, topic, connection, session).setVisible(true);
         }
     }//GEN-LAST:event_jButton_OkActionPerformed
 
@@ -216,7 +230,7 @@ public class ListePatientsForm extends javax.swing.JFrame
             this.dispose();
             mainFrame.dispose();
             
-            new MedecinForm(EJBAnalyses, EJBPatients, medecin, selectedPatient).setVisible(true);
+            new MedecinForm(EJBAnalyses, EJBPatients, medecin, selectedPatient, topic, connection, session).setVisible(true);
         }
     }//GEN-LAST:event_jTablePatientsMouseClicked
 

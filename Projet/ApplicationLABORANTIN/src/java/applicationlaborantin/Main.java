@@ -26,8 +26,9 @@ public class Main
     private static Queue myQueue;
     @Resource(mappedName = "jms/myQueueFactory")
     private static ConnectionFactory myQueueFactory; 
-    private static Connection connectionQueue = null;
-    private static Session sessionQueue = null;    
+    
+    private static Connection connectionQueue;
+    private static Session sessionQueue;    
         
     @EJB
     private static SessionBeanAnalysesRemote EJBAnalyses;
@@ -46,8 +47,14 @@ public class Main
                 System.err.println("Erreur de login");
                 System.exit(1);
             }
-            else                            
+            else        
+            {
+                connectionQueue = myQueueFactory.createConnection();
+                sessionQueue = connectionQueue.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                connectionQueue.start();
+                
                 new LaborantinFrame(EJBAnalyses, myQueue, connectionQueue, sessionQueue).setVisible(true);
+            }
         }
         catch (Exception ex) 
         {

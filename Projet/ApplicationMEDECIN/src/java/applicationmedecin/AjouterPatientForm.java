@@ -10,6 +10,9 @@ import entities.Patient;
 import interfaces.SessionBeanAnalysesRemote;
 import interfaces.SessionBeanPatientRemote;
 import javax.ejb.EJB;
+import javax.jms.Connection;
+import javax.jms.Session;
+import javax.jms.Topic;
 import javax.swing.JOptionPane;
 
 /**
@@ -24,6 +27,11 @@ public class AjouterPatientForm extends javax.swing.JFrame
     private static SessionBeanPatientRemote EJBPatients;
     private final Medecin medecin;
     private final EntrerPatientForm frame;
+        
+    private final Topic topic;
+    private final Connection connection;
+    private final Session session;
+    
     /**
      * Creates new form AjouterPatientForm
      * @param EJBAnalyses
@@ -31,12 +39,16 @@ public class AjouterPatientForm extends javax.swing.JFrame
      * @param frame
      * @param medecin
      */
-    public AjouterPatientForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin, EntrerPatientForm frame)
+    public AjouterPatientForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin, EntrerPatientForm frame, Topic topic, Connection connection, Session session)
     {        
         AjouterPatientForm.EJBAnalyses = EJBAnalyses;
         AjouterPatientForm.EJBPatients = EJBPatients;  
         this.medecin = medecin;
         this.frame = frame;
+        
+        this.topic = topic;
+        this.connection = connection;
+        this.session = session;
         
         initComponents();
         setLocationRelativeTo(this);
@@ -185,7 +197,7 @@ public class AjouterPatientForm extends javax.swing.JFrame
                 default:                    
                     frame.dispose();
                     this.dispose();
-                    new MedecinForm(EJBAnalyses, EJBPatients, medecin, p).setVisible(true);
+                    new MedecinForm(EJBAnalyses, EJBPatients, medecin, p, topic, connection, session).setVisible(true);
                     break;
             }
         }

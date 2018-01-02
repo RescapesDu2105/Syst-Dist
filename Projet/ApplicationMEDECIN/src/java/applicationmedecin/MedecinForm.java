@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -27,7 +27,11 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 import javax.jms.Topic;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.swing.JOptionPane;
 
 /**
@@ -42,18 +46,15 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
     private static SessionBeanPatientRemote EJBPatients;
     private final Medecin medecin;
     private final Patient patient;
-        
-    @Resource(mappedName = "jms/myTopic")
-    private static Topic myTopic;
-    @Resource(mappedName = "jms/myTopicFactory")
-    private static ConnectionFactory myTopicFactory;
-    private static Connection connectionTopic = null;
-    private static Session sessionTopic = null;    
-    
-    private MessageProducer producerTopic = null;
-    private MessageConsumer consumerTopic = null;  
-    
+           
     private final HashMap<Demande, ArrayList<Analyses>> ResultatsUrgents;
+    
+    private final Topic topic;
+    private final Connection connection;
+    private final Session session;
+    
+    private MessageProducer producer = null;
+    private MessageConsumer consumer = null;
     
     /**
      * Creates new form MedecinForm
@@ -61,25 +62,28 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
      * @param EJBPatients
      * @param medecin
      * @param patient
+     * @param topic
+     * @param connection
+     * @param session
      */
-    public MedecinForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin, Patient patient)
+    public MedecinForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin, Patient patient, Topic topic, Connection connection, Session session)
     {
         MedecinForm.EJBAnalyses = EJBAnalyses;
         MedecinForm.EJBPatients = EJBPatients;  
         this.medecin = medecin;
         this.patient = patient;     
-        this.ResultatsUrgents = new HashMap<>();
+        this.ResultatsUrgents = EJBAnalyses.getAllResultatsAnalysesByPatient(this.patient, true);
+        
+        this.topic = topic;
+        this.connection = connection;
+        this.session = session;
         
         try
-        {
-            connectionTopic = myTopicFactory.createConnection();
-            sessionTopic = connectionTopic.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            connectionTopic.start();
-        
-            consumerTopic = sessionTopic.createConsumer(myTopic);
-            consumerTopic.setMessageListener((MessageListener) this);
+        {           
+            consumer = session.createConsumer(this.topic);
+            consumer.setMessageListener((MessageListener) this);
 
-            producerTopic = sessionTopic.createProducer(myTopic);
+            producer = session.createProducer(this.topic);
         }
         catch (JMSException ex)
         {
@@ -232,12 +236,13 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
         {
             case 0:
                 jPanel.removeAll();
-                jPanel.add(new ResultatsPanel(ResultatsUrgents)); 
+                jPanel.add(new ResultatsPanel(this, ResultatsUrgents)); 
                 this.revalidate();
                 break;
             case 1:
                 jPanel.removeAll();
-                jPanel.add(new ResultatsPanel(EJBAnalyses.getAllResultatsAnalyses())); 
+                jPanel.add(new ResultatsPanel(this, EJBAnalyses.getAllResultatsAnalysesByPatient(patient, false))); 
+                this.revalidate();
                 break;
             case 2:
                 jButton_Prescrire.setEnabled(true);
@@ -258,7 +263,7 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
         if(Choix == 1)
         {
             this.dispose();            
-            new EntrerPatientForm(EJBAnalyses, EJBPatients, medecin).setVisible(true);
+            new EntrerPatientForm(EJBAnalyses, EJBPatients, medecin, topic, connection, session).setVisible(true);
         }
         else if(Choix == 2)
         {
@@ -275,10 +280,13 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
         {
             try 
             {
-                ObjectMessage om = (ObjectMessage) message;
+                if(!message.getBooleanProperty("MDBlog"))
+                {
+                    ObjectMessage om = (ObjectMessage) message;
 
-                Demande d = (Demande) om.getObject();
-                ResultatsUrgents.put(d, EJBAnalyses.getAnalysesByDemande(d));
+                    Demande d = (Demande) om.getObject();
+                    ResultatsUrgents.put(d, EJBAnalyses.getAnalysesByDemande(d));
+                }
             } 
             catch (JMSException ex) 
             {
@@ -295,5 +303,4 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
     public javax.swing.JPanel jPanel;
     // End of variables declaration//GEN-END:variables
 
-    
 }

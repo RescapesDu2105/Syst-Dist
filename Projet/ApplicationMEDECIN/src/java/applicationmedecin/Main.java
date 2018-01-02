@@ -9,7 +9,18 @@ import entities.Medecin;
 import interfaces.SessionBeanAnalysesRemote;
 import interfaces.SessionBeanPatientRemote;
 import java.security.Principal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+import javax.jms.Topic;
 
 /**
  *
@@ -17,10 +28,20 @@ import javax.ejb.EJB;
  */
 public class Main
 {
+
+    @Resource(mappedName = "jms/myTopic")
+    private static Topic myTopic;
+    @Resource(mappedName = "jms/myTopicFactory")
+    private static ConnectionFactory myTopicFactory;    
+    
+    private static Connection connection = null;
+    private static Session session = null;
+    
     @EJB
     private static SessionBeanAnalysesRemote EJBAnalyses;
     @EJB
     private static SessionBeanPatientRemote EJBPatients;
+    
     
     /**
      * @param args the command line arguments
@@ -41,8 +62,12 @@ public class Main
                 System.exit(1);
             }
             else
-            {
-                new EntrerPatientForm(EJBAnalyses, EJBPatients, medecin).setVisible(true);
+            {        
+                connection = myTopicFactory.createConnection();
+                session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                connection.start();
+            
+                new EntrerPatientForm(EJBAnalyses, EJBPatients, medecin, myTopic, connection, session).setVisible(true);
             }
         }
         catch (Exception ex) 
@@ -50,6 +75,5 @@ public class Main
             System.err.println("Erreur de login 2");
             System.exit(1);
         }
-    }
-    
+    }    
 }

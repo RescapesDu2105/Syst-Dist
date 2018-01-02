@@ -12,6 +12,9 @@ import interfaces.SessionBeanPatientRemote;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.jms.Connection;
+import javax.jms.Session;
+import javax.jms.Topic;
 import javax.swing.JOptionPane;
 
 /**
@@ -24,19 +27,30 @@ public class EntrerPatientForm extends javax.swing.JFrame
     private static SessionBeanAnalysesRemote EJBAnalyses;
     @EJB
     private static SessionBeanPatientRemote EJBPatients;
-    private final Medecin medecin;
+    private final Medecin medecin;    
+    
+    private final Topic topic;
+    private final Connection connection;
+    private final Session session;
     
     /**
      * Creates new form EntrerPatientForm
      * @param EJBAnalyses
      * @param EJBPatients
      * @param medecin
+     * @param topic
+     * @param connection
+     * @param session
      */
-    public EntrerPatientForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin)
+    public EntrerPatientForm(SessionBeanAnalysesRemote EJBAnalyses, SessionBeanPatientRemote EJBPatients, Medecin medecin, Topic topic, Connection connection, Session session)
     {
         EntrerPatientForm.EJBAnalyses = EJBAnalyses;
         EntrerPatientForm.EJBPatients = EJBPatients;
         this.medecin = medecin;
+        
+        this.topic = topic;
+        this.connection = connection;
+        this.session = session;
         
         initComponents();       
         setLocationRelativeTo(null);
@@ -165,17 +179,17 @@ public class EntrerPatientForm extends javax.swing.JFrame
                 break;
             case 1:
                 this.dispose();
-                new MedecinForm(EJBAnalyses, EJBPatients, medecin, (Patient) Patients.get(0)).setVisible(true);
+                new MedecinForm(EJBAnalyses, EJBPatients, medecin, (Patient) Patients.get(0), topic, connection, session).setVisible(true);
                 break;
             default:
-                new ListePatientsForm(EJBAnalyses, EJBPatients, this, medecin, Patients).setVisible(true);
+                new ListePatientsForm(EJBAnalyses, EJBPatients, this, medecin, Patients, topic, connection, session).setVisible(true);
                 break;
         }
     }//GEN-LAST:event_jButton_ChercherActionPerformed
 
     private void jButton_AjouterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_AjouterActionPerformed
     {//GEN-HEADEREND:event_jButton_AjouterActionPerformed
-        new AjouterPatientForm(EJBAnalyses, EJBPatients, medecin, this).setVisible(true);
+        new AjouterPatientForm(EJBAnalyses, EJBPatients, medecin, this, topic, connection, session).setVisible(true);
     }//GEN-LAST:event_jButton_AjouterActionPerformed
 
     private void jButton_QuitterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_QuitterActionPerformed

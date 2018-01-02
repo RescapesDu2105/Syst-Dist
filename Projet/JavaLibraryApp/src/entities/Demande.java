@@ -41,7 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Demande.findByIdDemande", query = "SELECT d FROM Demande d WHERE d.idDemande = :idDemande")
     , @NamedQuery(name = "Demande.findByDateHeureDemande", query = "SELECT d FROM Demande d WHERE d.dateHeureDemande = :dateHeureDemande")
     , @NamedQuery(name = "Demande.findByUrgent", query = "SELECT d FROM Demande d WHERE d.urgent = :urgent")
-    , @NamedQuery(name = "Demande.findByResultatsDisponibles", query = "SELECT d FROM Demande d WHERE d.resultatsDisponibles = true")
+    , @NamedQuery(name = "Demande.findByResultatsDisponibles", query = "SELECT d FROM Demande d WHERE d.refPatient = :patient AND d.resultatsDisponibles = true AND d.urgent = :urgent")
 })
 public class Demande implements Serializable
 {

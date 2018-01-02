@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package applicationpatient;
+package ws_resultat;
 
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
@@ -11,13 +11,13 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import javax.xml.ws.Endpoint;
-import ws.WsSelfHosted;
+import ws.Ws_Resultat;
 
 /**
  *
  * @author Philippe
  */
-public class ApplicationPATIENT
+public class Main
 {
 
     /**
@@ -25,8 +25,8 @@ public class ApplicationPATIENT
      */
     public static void main(String[] args)
     {
-        String address = "http://localhost:8023/WebServiceDemo";
-        Endpoint endpoint = Endpoint.publish(address, new WsSelfHosted());
+        String address = "http://localhost:8023/Ws_Resultat";
+        Endpoint endpoint = Endpoint.publish(address, new Ws_Resultat());
         System.out.println("WS listening at : " + address + "\nUse " + address + "?wsdl to see the wsdl");
         
         try

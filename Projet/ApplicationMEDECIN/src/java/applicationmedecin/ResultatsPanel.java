@@ -8,8 +8,13 @@ package applicationmedecin;
 import entities.Analyses;
 import entities.Demande;
 import entities.Patient;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,15 +23,18 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ResultatsPanel extends javax.swing.JPanel
 {    
+    private final MedecinForm medecinForm;
     private final HashMap<Demande, ArrayList<Analyses>> Resultats;
     private final ArrayList<Demande> Demandes;
 
     /**
      * Creates new form ResultatsPanel
+     * @param medecinForm
      * @param Resultats
      */
-    public ResultatsPanel(HashMap<Demande, ArrayList<Analyses>> Resultats)
+    public ResultatsPanel(MedecinForm medecinForm, HashMap<Demande, ArrayList<Analyses>> Resultats)
     {
+        this.medecinForm = medecinForm;
         this.Resultats = Resultats;
         initComponents();
         
@@ -42,10 +50,14 @@ public class ResultatsPanel extends javax.swing.JPanel
             objects[i][0] = d.getIdDemande();
             objects[i][1] = d.getRefPatient();
             objects[i][2] = d.getRefMedecin();
-            objects[i][3] = d.getDateHeureDemande();
+            objects[i][3] = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.FRANCE).format(d.getDateHeureDemande());
             objects[i][4] = d.getUrgent();
             dlm.addRow(objects[i]);
         }
+        
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        jTable.setDefaultRenderer(String.class, centerRenderer);
     }
 
     /**
@@ -75,7 +87,7 @@ public class ResultatsPanel extends javax.swing.JPanel
         {
             Class[] types = new Class []
             {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean []
             {
@@ -102,6 +114,13 @@ public class ResultatsPanel extends javax.swing.JPanel
         jScrollPane1.setViewportView(jTable);
 
         jButton_Fermer.setText("Fermer");
+        jButton_Fermer.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton_FermerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -137,6 +156,17 @@ public class ResultatsPanel extends javax.swing.JPanel
             new AfficherAnalysesFrame(selectedDemande.getIdDemande(), Resultats.get(selectedDemande)).setVisible(true);
         }
     }//GEN-LAST:event_jTableMouseClicked
+
+    private void jButton_FermerActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_FermerActionPerformed
+    {//GEN-HEADEREND:event_jButton_FermerActionPerformed
+        medecinForm.jPanel.removeAll();
+        medecinForm.jPanel.repaint();        
+        
+        medecinForm.jButton_Prescrire.setEnabled(true);
+        medecinForm.jButton_Modifier.setEnabled(true);
+        medecinForm.jButton_Consulter.setEnabled(true);
+        medecinForm.jButton_Quitter.setEnabled(true);
+    }//GEN-LAST:event_jButton_FermerActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

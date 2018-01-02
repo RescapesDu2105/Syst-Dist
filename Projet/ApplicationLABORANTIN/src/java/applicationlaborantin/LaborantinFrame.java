@@ -69,28 +69,29 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
         
         initComponents();
         setLocationRelativeTo(null);
+        
+        if(traiterFrame != null)
+            jButton_Traiter.setEnabled(true);
     }
     
     @Override
     public void onMessage(Message message)
     {
         System.out.println("====== Réception d'une notification de myQueue =====");
-        if(jButton_Traiter != null)
+        try 
         {
-            try 
-            {
-                ObjectMessage om = (ObjectMessage) message;
-                
+            ObjectMessage om = (ObjectMessage) message;
+
+            if(jButton_Traiter != null)
                 jButton_Traiter.setEnabled(true);
 
-                Demande d = (Demande) om.getObject();
-                ArrayList<Analyses> analyses = EJBAnalyses.getAnalysesByDemande(d);
-                traiterFrame = new TraiterFrame(EJBAnalyses, d, analyses);       
-            } 
-            catch (JMSException ex) 
-            {
-                ex.printStackTrace();
-            }
+            Demande d = (Demande) om.getObject();
+            ArrayList<Analyses> analyses = EJBAnalyses.getAnalysesByDemande(d);
+            traiterFrame = new TraiterFrame(EJBAnalyses, d, analyses);       
+        } 
+        catch (JMSException ex) 
+        {
+            ex.printStackTrace();
         }
     }
     

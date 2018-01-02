@@ -5,10 +5,16 @@
  */
 package mdb;
 
+import entities.Logs;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.jms.TextMessage;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  *
@@ -33,7 +39,28 @@ public class MDBlog implements MessageListener
     @Override
     public void onMessage(Message message)
     {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();        
         
+        em.getTransaction().begin();        
+        Logs logs = new Logs();
+        try
+        {
+            TextMessage msg = (TextMessage) message;
+            logs.setInfos(msg.getText());
+            em.persist(logs);            
+            em.getTransaction().commit();
+        }
+        catch(JMSException e)
+        {
+            e.printStackTrace();
+            //em.getTransaction().rollback();
+        }
+        finally
+        {
+            em.close();
+            emf.close();
+        }        
     }
     
 }
