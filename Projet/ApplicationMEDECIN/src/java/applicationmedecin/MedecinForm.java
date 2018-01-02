@@ -5,19 +5,36 @@
  */
 package applicationmedecin;
 
+import entities.Analyses;
+import entities.Demande;
 import entities.Medecin;
 import entities.Patient;
 import interfaces.SessionBeanAnalysesRemote;
 import interfaces.SessionBeanPatientRemote;
 import java.awt.CardLayout;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageListener;
+import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
+import javax.jms.Topic;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author Philippe
  */
-public class MedecinForm extends javax.swing.JFrame
+public class MedecinForm extends javax.swing.JFrame implements MessageListener
 {
     @EJB
     private static SessionBeanAnalysesRemote EJBAnalyses;
@@ -25,7 +42,18 @@ public class MedecinForm extends javax.swing.JFrame
     private static SessionBeanPatientRemote EJBPatients;
     private final Medecin medecin;
     private final Patient patient;
+        
+    @Resource(mappedName = "jms/myTopic")
+    private static Topic myTopic;
+    @Resource(mappedName = "jms/myTopicFactory")
+    private static ConnectionFactory myTopicFactory;
+    private static Connection connectionTopic = null;
+    private static Session sessionTopic = null;    
     
+    private MessageProducer producerTopic = null;
+    private MessageConsumer consumerTopic = null;  
+    
+    private final HashMap<Demande, ArrayList<Analyses>> ResultatsUrgents;
     
     /**
      * Creates new form MedecinForm
@@ -39,7 +67,25 @@ public class MedecinForm extends javax.swing.JFrame
         MedecinForm.EJBAnalyses = EJBAnalyses;
         MedecinForm.EJBPatients = EJBPatients;  
         this.medecin = medecin;
-        this.patient = patient;
+        this.patient = patient;     
+        this.ResultatsUrgents = new HashMap<>();
+        
+        try
+        {
+            connectionTopic = myTopicFactory.createConnection();
+            sessionTopic = connectionTopic.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            connectionTopic.start();
+        
+            consumerTopic = sessionTopic.createConsumer(myTopic);
+            consumerTopic.setMessageListener((MessageListener) this);
+
+            producerTopic = sessionTopic.createProducer(myTopic);
+        }
+        catch (JMSException ex)
+        {
+            Logger.getLogger(MedecinForm.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        
         
         initComponents();
         jPanel.setLayout(new CardLayout());
@@ -85,7 +131,8 @@ public class MedecinForm extends javax.swing.JFrame
             }
         });
 
-        jButton_Consulter.setText("Consulter des analyses");
+        jButton_Consulter.setText("Consulter des résultats");
+        jButton_Consulter.setToolTipText("");
         jButton_Consulter.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -177,6 +224,30 @@ public class MedecinForm extends javax.swing.JFrame
         jButton_Modifier.setEnabled(false);
         jButton_Consulter.setEnabled(false);
         jButton_Quitter.setEnabled(false);
+        
+        String[] options = new String[] {"Consulter les résultats urgents (" + ResultatsUrgents.size() + ")", "Consulter tous les résultats", "Annuler"};
+        int Choix = JOptionPane.showOptionDialog(null, "Consulter quels résultats ?", "Consulter", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+        
+        switch (Choix)
+        {
+            case 0:
+                jPanel.removeAll();
+                jPanel.add(new ResultatsPanel(ResultatsUrgents)); 
+                this.revalidate();
+                break;
+            case 1:
+                jPanel.removeAll();
+                jPanel.add(new ResultatsPanel(EJBAnalyses.getAllResultatsAnalyses())); 
+                break;
+            case 2:
+                jButton_Prescrire.setEnabled(true);
+                jButton_Modifier.setEnabled(true);
+                jButton_Consulter.setEnabled(true);
+                jButton_Quitter.setEnabled(true);
+                break;
+            default:
+                break;
+        }
     }//GEN-LAST:event_jButton_ConsulterActionPerformed
 
     private void jButton_QuitterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_QuitterActionPerformed
@@ -196,7 +267,25 @@ public class MedecinForm extends javax.swing.JFrame
         }
     }//GEN-LAST:event_jButton_QuitterActionPerformed
 
-    
+    @Override
+    public void onMessage(Message message)
+    {
+        System.out.println("====== Réception d'une notification de myTopic =====");
+        if(jPanel != null)
+        {
+            try 
+            {
+                ObjectMessage om = (ObjectMessage) message;
+
+                Demande d = (Demande) om.getObject();
+                ResultatsUrgents.put(d, EJBAnalyses.getAnalysesByDemande(d));
+            } 
+            catch (JMSException ex) 
+            {
+                ex.printStackTrace();
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton jButton_Consulter;
@@ -205,4 +294,6 @@ public class MedecinForm extends javax.swing.JFrame
     public javax.swing.JButton jButton_Quitter;
     public javax.swing.JPanel jPanel;
     // End of variables declaration//GEN-END:variables
+
+    
 }

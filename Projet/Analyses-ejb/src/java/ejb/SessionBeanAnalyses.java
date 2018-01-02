@@ -13,6 +13,7 @@ import interfaces.SessionBeanAnalysesRemote;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.annotation.Resource;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
@@ -137,7 +138,6 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         try
         {
             analyses = new ArrayList<>(em.createNamedQuery("Analyses.findAll").getResultList());
-            System.out.println("analyses = " + analyses.size());
         }
         catch(Exception e)
         {
@@ -151,7 +151,37 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         
         return analyses;
     }
-    
+
+    @Override
+    public HashMap<Demande, ArrayList<Analyses>> getAllResultatsAnalyses()
+    {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
+        
+        em.getTransaction().begin();
+        HashMap<Demande, ArrayList<Analyses>> Resultats = new HashMap<>();
+        ArrayList<Demande> Demandes = null;
+        try
+        {
+            Demandes = new ArrayList<>(em.createNamedQuery("Demande.findByResultatsDisponibles").getResultList());
+            for(Demande d : Demandes)
+            {
+                Resultats.put(d, getAnalysesByDemande(d));
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            em.close();
+            emf.close();
+        }
+        
+        return Resultats;
+    }
+        
     @Override
     public ArrayList<Analyses> getAnalysesByDemande(Demande Demande)
     {
@@ -163,7 +193,6 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         try
         {
             analyses = new ArrayList<>(em.createNamedQuery("Analyses.findByDemande").setParameter("demande", Demande).getResultList());
-            //System.out.println("analyses = " + analyses.size());
         }
         catch(Exception e)
         {
@@ -193,14 +222,10 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
             d.setRefPatient(patient);
             d.setDateHeureDemande(new Timestamp(System.currentTimeMillis()));
             d.setUrgent(urgent);
+            d.setResultatsDisponibles(false);
             em.persist(d);             
             em.flush();
             
-            //if(patient.getDemandeList() == null)
-              //  patient.setDemandeList(new ArrayList<Demande>());
-            
-            //patient.getDemandeList().add(d);
-            //em.persist(patient);
             DemandeId = d.getIdDemande();
             for(String s : analyses)
             {                
@@ -245,9 +270,13 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         em.getTransaction().begin();
         try
         {
+            Query query = em.createQuery("UPDATE Demande d SET d.resultatsDisponibles = true WHERE d.idDemande = :idDemande");
+            query.setParameter("idDemande", demande.getIdDemande());            
+            query.executeUpdate();                
+            
             for(Analyses a : analyses)
             {
-                Query query = em.createQuery("UPDATE Analyses a SET a.valeur = :valeur WHERE a.idAnalyses = :idAnalyses");
+                query = em.createQuery("UPDATE Analyses a SET a.valeur = :valeur WHERE a.idAnalyses = :idAnalyses");
                 query.setParameter("valeur", a.getValeur());
                 query.setParameter("idAnalyses", a.getIdAnalyses()); 
                 query.executeUpdate();                
@@ -258,7 +287,6 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
             {
                 ObjectMessage om = contextT.createObjectMessage();
                 om.setObject(demande);
-
                 contextT.createProducer().send(myTopic, om);
             }
         }

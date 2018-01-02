@@ -81,7 +81,8 @@
     </Component>
     <Component class="javax.swing.JButton" name="jButton_Consulter">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Consulter des analyses"/>
+        <Property name="text" type="java.lang.String" value="Consulter des r&#xe9;sultats"/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton_ConsulterActionPerformed"/>

@@ -11,6 +11,7 @@ import entities.Medecin;
 import entities.Patient;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.ejb.Remote;
 
 /**
@@ -27,5 +28,6 @@ public interface SessionBeanAnalysesRemote
     public ArrayList<Analyses> getAnalyses();
     public ArrayList<Analyses> getAnalysesByDemande(Demande Demande);
     public int PrescrireDemande(Medecin medecin, Patient patient, boolean urgent, ArrayList<String> analyses);
-    public void TraiterDemande(Demande demande, ArrayList<Analyses> analyses);
+    public void TraiterDemande(Demande demande, ArrayList<Analyses> analyses);    
+    public HashMap<Demande, ArrayList<Analyses>> getAllResultatsAnalyses();
 }

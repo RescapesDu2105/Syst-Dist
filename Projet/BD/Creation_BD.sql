@@ -23,6 +23,7 @@ CREATE TABLE `bd_systdist`.`demande` (
   `RefMedecin` INT NULL,
   `DateHeureDemande` DATETIME NULL,
   `Urgent` BOOLEAN NULL,
+  `ResultatsDisponibles` BOOLEAN NOT NULL,
   PRIMARY KEY (`idDemande`),
   CONSTRAINT demande_patient_ref FOREIGN KEY (RefPatient)
 	REFERENCES Patient(idPatient),

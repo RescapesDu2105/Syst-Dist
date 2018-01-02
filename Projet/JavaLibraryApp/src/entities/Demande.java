@@ -1,9 +1,11 @@
+package entities;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entities;
+
 
 import java.io.Serializable;
 import java.util.Date;
@@ -39,6 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Demande.findByIdDemande", query = "SELECT d FROM Demande d WHERE d.idDemande = :idDemande")
     , @NamedQuery(name = "Demande.findByDateHeureDemande", query = "SELECT d FROM Demande d WHERE d.dateHeureDemande = :dateHeureDemande")
     , @NamedQuery(name = "Demande.findByUrgent", query = "SELECT d FROM Demande d WHERE d.urgent = :urgent")
+    , @NamedQuery(name = "Demande.findByResultatsDisponibles", query = "SELECT d FROM Demande d WHERE d.resultatsDisponibles = true")
 })
 public class Demande implements Serializable
 {
@@ -54,6 +57,8 @@ public class Demande implements Serializable
     private Date dateHeureDemande;
     @Column(name = "Urgent")
     private Boolean urgent;
+    @Column(name = "ResultatsDisponibles")
+    private Boolean resultatsDisponibles;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "demande")
     private List<Analyses> analysesList;
     @JoinColumn(name = "RefMedecin", referencedColumnName = "idMedecin")
@@ -133,6 +138,17 @@ public class Demande implements Serializable
         this.refPatient = refPatient;
     }
 
+    public Boolean getResultatsDisponibles()
+    {
+        return resultatsDisponibles;
+    }
+
+    public void setResultatsDisponibles(Boolean resultatsDisponibles)
+    {
+        this.resultatsDisponibles = resultatsDisponibles;
+    }
+    
+   
     @Override
     public int hashCode()
     {

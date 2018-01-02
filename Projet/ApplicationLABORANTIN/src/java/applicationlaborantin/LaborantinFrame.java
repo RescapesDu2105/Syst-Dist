@@ -21,8 +21,6 @@ import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
 
 /**
  *
@@ -36,16 +34,9 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
     private final Queue queue;
     private final Connection connectionQ;
     private final Session sessionQ;    
-    
-    private final Topic topic;
-    private final Connection connectionT;
-    private final Session sessionT;
 
     private MessageProducer producerQ = null;
-    private MessageConsumer consumerQ = null;    
-    
-    private MessageProducer producerT = null;
-    private MessageConsumer consumerT = null;
+    private MessageConsumer consumerQ = null;  
     
     private TraiterFrame traiterFrame = null;
     
@@ -55,19 +46,13 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
      * @param queue
      * @param connectionQ
      * @param sessionQ
-     * @param topic
-     * @param connectionT
-     * @param sessionT
      */
-    public LaborantinFrame(SessionBeanAnalysesRemote EJBAnalyses, Queue queue, Connection connectionQ, Session sessionQ, Topic topic, Connection connectionT, Session sessionT)
+    public LaborantinFrame(SessionBeanAnalysesRemote EJBAnalyses, Queue queue, Connection connectionQ, Session sessionQ)
     {        
         LaborantinFrame.EJBAnalyses = EJBAnalyses;
         this.queue = queue;
         this.connectionQ = connectionQ;
         this.sessionQ = sessionQ;
-        this.topic = topic;
-        this.connectionT = connectionT;
-        this.sessionT = sessionT;
         
         try
         {
@@ -75,12 +60,6 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
             consumerQ.setMessageListener((MessageListener) this);
             
             producerQ = sessionQ.createProducer(queue);
-            
-            
-            consumerT = sessionT.createConsumer(topic);
-            consumerT.setMessageListener((MessageListener) this);
-            
-            producerT = sessionT.createProducer(topic);
         }
         catch(JMSException ex)
         {
@@ -101,15 +80,12 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
             try 
             {
                 ObjectMessage om = (ObjectMessage) message;
+                
+                jButton_Traiter.setEnabled(true);
 
-                if(om.getBooleanProperty("Demande") == true)
-                {
-                    jButton_Traiter.setEnabled(true);
-
-                    Demande d = (Demande) om.getObject();
-                    ArrayList<Analyses> analyses = EJBAnalyses.getAnalysesByDemande(d);
-                    traiterFrame = new TraiterFrame(EJBAnalyses, d, analyses);                
-                }
+                Demande d = (Demande) om.getObject();
+                ArrayList<Analyses> analyses = EJBAnalyses.getAnalysesByDemande(d);
+                traiterFrame = new TraiterFrame(EJBAnalyses, d, analyses);       
             } 
             catch (JMSException ex) 
             {
@@ -117,7 +93,7 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
             }
         }
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -164,20 +140,19 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jButton_Traiter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton_Traiter, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(166, 166, 166)
+                .addGap(164, 164, 164)
                 .addComponent(jButton_Quitter)
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(87, Short.MAX_VALUE)
                 .addComponent(jButton_Traiter, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(69, 69, 69)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton_Quitter)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -187,6 +162,15 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
     {//GEN-HEADEREND:event_jButton_TraiterActionPerformed
         jButton_Traiter.setEnabled(false);
         traiterFrame.setVisible(true);
+        
+        /*try
+        {
+            sessionQ.commit();
+        }
+        catch (JMSException ex)
+        {
+            Logger.getLogger(LaborantinFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }//GEN-LAST:event_jButton_TraiterActionPerformed
 
     private void jButton_QuitterActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_QuitterActionPerformed
@@ -194,7 +178,6 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
         try
         {
             connectionQ.close();
-            connectionT.close();
         }
         catch (JMSException ex)
         {
@@ -209,7 +192,6 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
         try
         {
             connectionQ.close();
-            connectionT.close();
         }
         catch (JMSException ex)
         {

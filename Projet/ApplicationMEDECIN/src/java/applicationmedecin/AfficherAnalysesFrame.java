@@ -3,53 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package applicationlaborantin;
+package applicationmedecin;
 
 import entities.Analyses;
-import entities.Demande;
-import interfaces.SessionBeanAnalysesRemote;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
-import javax.jms.JMSException;
-import javax.jms.Session;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Philippe
  */
-public class TraiterFrame extends javax.swing.JFrame
+public class AfficherAnalysesFrame extends javax.swing.JFrame
 {
-    @EJB
-    private static SessionBeanAnalysesRemote EJBAnalyses;
-    private final Demande demande;
-    private final ArrayList<Analyses> analyses;
     /**
-     * Creates new form TraiterFrame
-     * @param EJBAnalyses
-     * @param demande
+     * Creates new form AfficherAnalysesFrame
      * @param analyses
      */
-    public TraiterFrame(SessionBeanAnalysesRemote EJBAnalyses, Demande demande, ArrayList<Analyses> analyses)
+    public AfficherAnalysesFrame(int idDemande, ArrayList<Analyses> analyses)
     {
-        TraiterFrame.EJBAnalyses = EJBAnalyses;
-        this.demande = demande;
-        this.analyses = analyses;
-        
         initComponents();
-        setLocationRelativeTo(null);
         
         DefaultTableModel dtm = (DefaultTableModel) jTable.getModel();
         
         jLabel.setText("Référence de la demande : " + analyses.get(0).getDemande().getIdDemande());
         //System.out.println("analyses = " + analyses.size());
-        this.analyses.forEach((a) ->
+        analyses.forEach((a) ->
         {
             Object[] obj = new Object[2];
             obj[0] = a.getItem();
+            obj[1] = a.getValeur();
             dtm.addRow(obj);
         });
     }
@@ -64,19 +46,19 @@ public class TraiterFrame extends javax.swing.JFrame
     private void initComponents()
     {
 
-        jButton_Confirmer = new javax.swing.JButton();
+        jButton_Fermer = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
         jLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jButton_Confirmer.setText("Confirmer");
-        jButton_Confirmer.addActionListener(new java.awt.event.ActionListener()
+        jButton_Fermer.setText("Fermer");
+        jButton_Fermer.addActionListener(new java.awt.event.ActionListener()
         {
             public void actionPerformed(java.awt.event.ActionEvent evt)
             {
-                jButton_ConfirmerActionPerformed(evt);
+                jButton_FermerActionPerformed(evt);
             }
         });
 
@@ -97,7 +79,7 @@ public class TraiterFrame extends javax.swing.JFrame
             };
             boolean[] canEdit = new boolean []
             {
-                false, true
+                false, false
             };
 
             public Class getColumnClass(int columnIndex)
@@ -124,12 +106,12 @@ public class TraiterFrame extends javax.swing.JFrame
                         .addContainerGap()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jButton_Confirmer)
-                        .addGap(0, 63, Short.MAX_VALUE)))
+                        .addGap(70, 70, 70)
+                        .addComponent(jButton_Fermer)
+                        .addGap(0, 72, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(63, 63, 63)
+                .addGap(34, 34, 34)
                 .addComponent(jLabel)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -138,42 +120,23 @@ public class TraiterFrame extends javax.swing.JFrame
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton_Confirmer)
-                .addContainerGap())
+                .addComponent(jButton_Fermer)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton_ConfirmerActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_ConfirmerActionPerformed
-    {//GEN-HEADEREND:event_jButton_ConfirmerActionPerformed
-        boolean Ok = true;
-        for(int i = 0 ; i < jTable.getModel().getRowCount() && Ok ; i++)
-        {
-            if(jTable.getModel().getValueAt(i, 1) == null)
-                Ok = false;
-        }
-        
-        if(Ok)
-        {
-            for(int i = 0 ; i < jTable.getModel().getRowCount() && Ok ; i++)
-            {
-                analyses.get(i).setValeur((String) jTable.getModel().getValueAt(i, 1));
-            }
-            demande.setResultatsDisponibles(true);
-            EJBAnalyses.TraiterDemande(demande, analyses);
-            this.dispose();
-        }
-        else
-            JOptionPane.showMessageDialog(this, "Toutes les valeurs n'ont pas été encodées !", "Attention", JOptionPane.WARNING_MESSAGE);
-    }//GEN-LAST:event_jButton_ConfirmerActionPerformed
-
+    private void jButton_FermerActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_FermerActionPerformed
+    {//GEN-HEADEREND:event_jButton_FermerActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton_FermerActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton_Confirmer;
+    private javax.swing.JButton jButton_Fermer;
     private javax.swing.JLabel jLabel;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable;

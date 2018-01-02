@@ -3,10 +3,10 @@
   <persistence-unit name="JavaLibraryAppPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>entities.Analyses</class>
-    <class>entities.Demande</class>
     <class>entities.Logs</class>
     <class>entities.Medecin</class>
     <class>entities.Patient</class>
+    <class>.Demande</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/BD_SystDist?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="SystDist"/>
