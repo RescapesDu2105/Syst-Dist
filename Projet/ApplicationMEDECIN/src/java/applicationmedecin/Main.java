@@ -38,7 +38,7 @@ public class Main
                 //Erreur
                 //JOptionPane.showMessageDialog(this, "Le nom d'utilisateur et/ou le mot de passe est incorrect !", "Erreur", JOptionPane.ERROR_MESSAGE);
                 System.err.println("Erreur de login 1");
-                //System.exit(1);
+                System.exit(1);
             }
             else
             {
@@ -48,6 +48,7 @@ public class Main
         catch (Exception ex) 
         {
             System.err.println("Erreur de login 2");
+            System.exit(1);
         }
     }
     

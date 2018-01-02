@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entities;
+
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -53,9 +53,9 @@ public class Demande implements Serializable
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateHeureDemande;
     @Column(name = "Urgent")
-    private Boolean urgent;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "demande")
-    private List<Analyses> analysesList;
+    private Integer urgent;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDemande")
+    private Collection<Analyses> analysesCollection;
     @JoinColumn(name = "RefMedecin", referencedColumnName = "idMedecin")
     @ManyToOne
     private Medecin refMedecin;
@@ -92,25 +92,25 @@ public class Demande implements Serializable
         this.dateHeureDemande = dateHeureDemande;
     }
 
-    public Boolean getUrgent()
+    public Integer getUrgent()
     {
         return urgent;
     }
 
-    public void setUrgent(Boolean urgent)
+    public void setUrgent(Integer urgent)
     {
         this.urgent = urgent;
     }
 
     @XmlTransient
-    public List<Analyses> getAnalysesList()
+    public Collection<Analyses> getAnalysesCollection()
     {
-        return analysesList;
+        return analysesCollection;
     }
 
-    public void setAnalysesList(List<Analyses> analysesList)
+    public void setAnalysesCollection(Collection<Analyses> analysesCollection)
     {
-        this.analysesList = analysesList;
+        this.analysesCollection = analysesCollection;
     }
 
     public Medecin getRefMedecin()

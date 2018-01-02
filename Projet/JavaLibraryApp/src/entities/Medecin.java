@@ -6,7 +6,7 @@
 package entities;
 
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,7 +54,7 @@ public class Medecin implements Serializable
     @Column(name = "Login")
     private String login;
     @OneToMany(mappedBy = "refMedecin")
-    private Collection<Demande> demandeCollection;
+    private List<Demande> demandeList;
 
     public Medecin()
     {
@@ -106,14 +106,14 @@ public class Medecin implements Serializable
     }
 
     @XmlTransient
-    public Collection<Demande> getDemandeCollection()
+    public List<Demande> getDemandeList()
     {
-        return demandeCollection;
+        return demandeList;
     }
 
-    public void setDemandeCollection(Collection<Demande> demandeCollection)
+    public void setDemandeList(List<Demande> demandeList)
     {
-        this.demandeCollection = demandeCollection;
+        this.demandeList = demandeList;
     }
 
     @Override

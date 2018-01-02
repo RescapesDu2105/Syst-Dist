@@ -22,7 +22,7 @@ CREATE TABLE `bd_systdist`.`demande` (
   `RefPatient` INT NULL,
   `RefMedecin` INT NULL,
   `DateHeureDemande` DATETIME NULL,
-  `Urgent` INT NULL,
+  `Urgent` BOOLEAN NULL,
   PRIMARY KEY (`idDemande`),
   CONSTRAINT demande_patient_ref FOREIGN KEY (RefPatient)
 	REFERENCES Patient(idPatient),
@@ -33,9 +33,9 @@ CREATE TABLE `bd_systdist`.`analyses` (
   `idAnalyses` INT NOT NULL AUTO_INCREMENT,
   `Item` VARCHAR(45) NULL,
   `Valeur` VARCHAR(45) NULL,
-  `idDemande` INT NOT NULL,
+  `Demande` INT NOT NULL,
   PRIMARY KEY (`idAnalyses`),
-  CONSTRAINT analyses_demande_ref FOREIGN KEY(idDemande)
+  CONSTRAINT analyses_demande_ref FOREIGN KEY(Demande)
 	REFERENCES Demande(idDemande));
 
 CREATE TABLE `bd_systdist`.`logs` (
@@ -44,8 +44,8 @@ CREATE TABLE `bd_systdist`.`logs` (
   PRIMARY KEY (`idLogs`));
 
 
-INSERT INTO bd_systdist.medecin VALUES('1', 'Dimartino', 'Philippe', 'philippedimartino');
+INSERT INTO bd_systdist.medecin(idMedecin, Nom, Prenom, Login) VALUES('1', 'Dimartino', 'Philippe', 'philippedimartino');
 
-INSERT INTO bd_systdist.patient VALUES('1', 'Serrhini', 'Souad', 'sousou');
+INSERT INTO bd_systdist.patient(idPatient, Nom, Prenom, Login) VALUES('1', 'Serrhini', 'Souad', 'sousou');
 
 COMMIT;

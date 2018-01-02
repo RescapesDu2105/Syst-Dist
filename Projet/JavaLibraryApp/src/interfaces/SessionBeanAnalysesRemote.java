@@ -6,6 +6,7 @@
 package interfaces;
 
 import entities.Analyses;
+import entities.Demande;
 import entities.Medecin;
 import entities.Patient;
 import java.security.Principal;
@@ -24,6 +25,7 @@ public interface SessionBeanAnalysesRemote
     //public Medecin Authentification();
     public Medecin getMedecinByLogin(String login);
     public ArrayList<Analyses> getAnalyses();
-    public ArrayList<Analyses> getAnalysesByDemande(int idDemande);
+    public ArrayList<Analyses> getAnalysesByDemande(Demande Demande);
     public int PrescrireDemande(Medecin medecin, Patient patient, boolean urgent, ArrayList<String> analyses);
+    public void TraiterDemande(Demande demande, ArrayList<Analyses> analyses);
 }

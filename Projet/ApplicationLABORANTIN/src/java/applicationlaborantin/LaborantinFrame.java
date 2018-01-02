@@ -96,22 +96,25 @@ public class LaborantinFrame extends javax.swing.JFrame implements MessageListen
     public void onMessage(Message message)
     {
         System.out.println("====== Réception d'une notification de myQueue =====");
-        try 
+        if(jButton_Traiter != null)
         {
-            ObjectMessage om = (ObjectMessage) message;
-
-            if(om.getBooleanProperty("Demande") == true)
+            try 
             {
-                jButton_Traiter.setEnabled(true);
+                ObjectMessage om = (ObjectMessage) message;
 
-                Demande d = (Demande) om.getObject();
-                ArrayList<Analyses> analyses = EJBAnalyses.getAnalysesByDemande(d.getIdDemande());
-                traiterFrame = new TraiterFrame(analyses);                
+                if(om.getBooleanProperty("Demande") == true)
+                {
+                    jButton_Traiter.setEnabled(true);
+
+                    Demande d = (Demande) om.getObject();
+                    ArrayList<Analyses> analyses = EJBAnalyses.getAnalysesByDemande(d);
+                    traiterFrame = new TraiterFrame(EJBAnalyses, d, analyses);                
+                }
+            } 
+            catch (JMSException ex) 
+            {
+                ex.printStackTrace();
             }
-        } 
-        catch (JMSException ex) 
-        {
-            ex.printStackTrace();
         }
     }
 

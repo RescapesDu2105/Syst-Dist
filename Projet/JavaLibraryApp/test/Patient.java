@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entities;
+
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,8 +32,6 @@ import javax.xml.bind.annotation.XmlTransient;
 {
     @NamedQuery(name = "Patient.findAll", query = "SELECT p FROM Patient p")
     , @NamedQuery(name = "Patient.findByIdPatient", query = "SELECT p FROM Patient p WHERE p.idPatient = :idPatient")
-    , @NamedQuery(name = "Patient.findByNom", query = "SELECT p FROM Patient p WHERE p.nom = :nom")
-    , @NamedQuery(name = "Patient.findByPrenom", query = "SELECT p FROM Patient p WHERE p.prenom = :prenom")
     , @NamedQuery(name = "Patient.findByLogin", query = "SELECT p FROM Patient p WHERE p.login = :login")
     , @NamedQuery(name = "Patient.findByNomPrenom", query = "SELECT p FROM Patient p WHERE UPPER(p.nom) = UPPER(:nom) AND UPPER(p.prenom) = UPPER(:prenom)")    
     , @NamedQuery(name = "Patient.update", query = "UPDATE Patient SET nom = :nom, prenom = :prenom, login = :login WHERE idPatient = :idPatient")
@@ -57,7 +55,7 @@ public class Patient implements Serializable
     @Column(name = "Login")
     private String login;
     @OneToMany(mappedBy = "refPatient")
-    private List<Demande> demandeList;
+    private Collection<Demande> demandeCollection;
 
     public Patient()
     {
@@ -109,14 +107,14 @@ public class Patient implements Serializable
     }
 
     @XmlTransient
-    public List<Demande> getDemandeList()
+    public Collection<Demande> getDemandeCollection()
     {
-        return demandeList;
+        return demandeCollection;
     }
 
-    public void setDemandeList(List<Demande> demandeList)
+    public void setDemandeCollection(Collection<Demande> demandeCollection)
     {
-        this.demandeList = demandeList;
+        this.demandeCollection = demandeCollection;
     }
 
     @Override

@@ -3,20 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entities;
+
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -26,27 +25,25 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Philippe
  */
 @Entity
-@Table(name = "patient")
+@Table(name = "medecin")
 @XmlRootElement
 @NamedQueries(
 {
-    @NamedQuery(name = "Patient.findAll", query = "SELECT p FROM Patient p")
-    , @NamedQuery(name = "Patient.findByIdPatient", query = "SELECT p FROM Patient p WHERE p.idPatient = :idPatient")
-    , @NamedQuery(name = "Patient.findByNom", query = "SELECT p FROM Patient p WHERE p.nom = :nom")
-    , @NamedQuery(name = "Patient.findByPrenom", query = "SELECT p FROM Patient p WHERE p.prenom = :prenom")
-    , @NamedQuery(name = "Patient.findByLogin", query = "SELECT p FROM Patient p WHERE p.login = :login")
-    , @NamedQuery(name = "Patient.findByNomPrenom", query = "SELECT p FROM Patient p WHERE UPPER(p.nom) = UPPER(:nom) AND UPPER(p.prenom) = UPPER(:prenom)")    
-    , @NamedQuery(name = "Patient.update", query = "UPDATE Patient SET nom = :nom, prenom = :prenom, login = :login WHERE idPatient = :idPatient")
+    @NamedQuery(name = "Medecin.findAll", query = "SELECT m FROM Medecin m")
+    , @NamedQuery(name = "Medecin.findByIdMedecin", query = "SELECT m FROM Medecin m WHERE m.idMedecin = :idMedecin")
+    , @NamedQuery(name = "Medecin.findByNom", query = "SELECT m FROM Medecin m WHERE m.nom = :nom")
+    , @NamedQuery(name = "Medecin.findByPrenom", query = "SELECT m FROM Medecin m WHERE m.prenom = :prenom")
+    , @NamedQuery(name = "Medecin.findByLogin", query = "SELECT m FROM Medecin m WHERE m.login = :login")
 })
-public class Patient implements Serializable
+public class Medecin implements Serializable
 {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "idPatient")
-    private Integer idPatient;
+    @NotNull
+    @Column(name = "idMedecin")
+    private Integer idMedecin;
     @Size(max = 45)
     @Column(name = "Nom")
     private String nom;
@@ -56,26 +53,26 @@ public class Patient implements Serializable
     @Size(max = 45)
     @Column(name = "Login")
     private String login;
-    @OneToMany(mappedBy = "refPatient")
-    private List<Demande> demandeList;
+    @OneToMany(mappedBy = "refMedecin")
+    private Collection<Demande> demandeCollection;
 
-    public Patient()
+    public Medecin()
     {
     }
 
-    public Patient(Integer idPatient)
+    public Medecin(Integer idMedecin)
     {
-        this.idPatient = idPatient;
+        this.idMedecin = idMedecin;
     }
 
-    public Integer getIdPatient()
+    public Integer getIdMedecin()
     {
-        return idPatient;
+        return idMedecin;
     }
 
-    public void setIdPatient(Integer idPatient)
+    public void setIdMedecin(Integer idMedecin)
     {
-        this.idPatient = idPatient;
+        this.idMedecin = idMedecin;
     }
 
     public String getNom()
@@ -109,21 +106,21 @@ public class Patient implements Serializable
     }
 
     @XmlTransient
-    public List<Demande> getDemandeList()
+    public Collection<Demande> getDemandeCollection()
     {
-        return demandeList;
+        return demandeCollection;
     }
 
-    public void setDemandeList(List<Demande> demandeList)
+    public void setDemandeCollection(Collection<Demande> demandeCollection)
     {
-        this.demandeList = demandeList;
+        this.demandeCollection = demandeCollection;
     }
 
     @Override
     public int hashCode()
     {
         int hash = 0;
-        hash += (idPatient != null ? idPatient.hashCode() : 0);
+        hash += (idMedecin != null ? idMedecin.hashCode() : 0);
         return hash;
     }
 
@@ -131,12 +128,12 @@ public class Patient implements Serializable
     public boolean equals(Object object)
     {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Patient))
+        if (!(object instanceof Medecin))
         {
             return false;
         }
-        Patient other = (Patient) object;
-        if ((this.idPatient == null && other.idPatient != null) || (this.idPatient != null && !this.idPatient.equals(other.idPatient)))
+        Medecin other = (Medecin) object;
+        if ((this.idMedecin == null && other.idMedecin != null) || (this.idMedecin != null && !this.idMedecin.equals(other.idMedecin)))
         {
             return false;
         }
@@ -146,7 +143,7 @@ public class Patient implements Serializable
     @Override
     public String toString()
     {
-        return this.nom + " " + this.prenom;
+        return this.getNom() + " " + this.getPrenom();
     }
     
 }

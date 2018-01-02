@@ -23,9 +23,11 @@ import javax.jms.JMSConnectionFactory;
 import javax.jms.JMSContext;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
+import javax.jms.Topic;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  *
@@ -36,12 +38,19 @@ import javax.persistence.Persistence;
 public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
 {
 
+    @Resource(mappedName = "jms/myTopic")
+    private Topic myTopic;
+
+    @Inject
+    @JMSConnectionFactory("jms/myTopicFactory")
+    private JMSContext contextT;
+
     @Resource(mappedName = "jms/myQueue")
     private Queue myQueue;
 
     @Inject
     @JMSConnectionFactory("jms/myQueueFactory")
-    private JMSContext context;
+    private JMSContext contextQ;
     @Resource SessionContext sessionContext; 
     
     @Override
@@ -50,8 +59,8 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
     {
         try
         {
-            System.out.println("Authentification");
-            System.out.println("ctx = " + sessionContext);
+            //System.out.println("Authentification");
+            //System.out.println("ctx = " + sessionContext);
             //System.out.println("caller = " + sessionContext.getCallerPrincipal());
             
             if(sessionContext.isCallerInRole("Medecin"))
@@ -73,8 +82,8 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
     {
         try
         {
-            System.out.println("Authentification");
-            System.out.println("ctx = " + sessionContext);
+            //System.out.println("Authentification");
+            //System.out.println("ctx = " + sessionContext);
             //System.out.println("caller = " + sessionContext.getCallerPrincipal());
             
             if(sessionContext.isCallerInRole("Laborantin"))
@@ -144,7 +153,7 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
     }
     
     @Override
-    public ArrayList<Analyses> getAnalysesByDemande(int idDemande)
+    public ArrayList<Analyses> getAnalysesByDemande(Demande Demande)
     {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
         EntityManager em = emf.createEntityManager();
@@ -153,7 +162,7 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         ArrayList<Analyses> analyses = null;
         try
         {
-            analyses = new ArrayList<>(em.createNamedQuery("Analyses.findByIdDemande").setParameter("idDemande", idDemande).getResultList());
+            analyses = new ArrayList<>(em.createNamedQuery("Analyses.findByDemande").setParameter("demande", Demande).getResultList());
             //System.out.println("analyses = " + analyses.size());
         }
         catch(Exception e)
@@ -183,24 +192,30 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
             d.setRefMedecin(medecin);
             d.setRefPatient(patient);
             d.setDateHeureDemande(new Timestamp(System.currentTimeMillis()));
-            d.setUrgent(urgent == true ? 1 : 0);
+            d.setUrgent(urgent);
             em.persist(d);             
             em.flush();
+            
+            //if(patient.getDemandeList() == null)
+              //  patient.setDemandeList(new ArrayList<Demande>());
+            
+            //patient.getDemandeList().add(d);
+            //em.persist(patient);
             DemandeId = d.getIdDemande();
             for(String s : analyses)
             {                
                 Analyses a = new Analyses();
-                a.setIdDemande(d);
+                a.setDemande(d);
                 a.setItem(s);
                 em.persist(a);
             }
             em.getTransaction().commit();
             
-            ObjectMessage om = context.createObjectMessage();
+            ObjectMessage om = contextQ.createObjectMessage();
             om.setObject(d);
             om.setBooleanProperty("Demande", true);
             
-            context.createProducer().send(myQueue, om);
+            contextQ.createProducer().send(myQueue, om);
         }
         catch(Exception e)
         {
@@ -221,8 +236,40 @@ public class SessionBeanAnalyses implements SessionBeanAnalysesRemote
         return DemandeId;
     }
 
-    private void sendJMSMessageToMyQueue(String messageData)
+    @Override
+    public void TraiterDemande(Demande demande, ArrayList<Analyses> analyses)
     {
-        context.createProducer().send(myQueue, messageData);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JavaLibraryAppPU");
+        EntityManager em = emf.createEntityManager();
+        
+        em.getTransaction().begin();
+        try
+        {
+            for(Analyses a : analyses)
+            {
+                Query query = em.createQuery("UPDATE Analyses a SET a.valeur = :valeur WHERE a.idAnalyses = :idAnalyses");
+                query.setParameter("valeur", a.getValeur());
+                query.setParameter("idAnalyses", a.getIdAnalyses()); 
+                query.executeUpdate();                
+            }
+            em.getTransaction().commit();
+            
+            if(demande.getUrgent() == true)
+            {
+                ObjectMessage om = contextT.createObjectMessage();
+                om.setObject(demande);
+
+                contextT.createProducer().send(myTopic, om);
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            em.close();
+            emf.close();
+        }
     }
 }

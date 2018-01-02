@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entities;
+
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Analyses.findByIdAnalyses", query = "SELECT a FROM Analyses a WHERE a.idAnalyses = :idAnalyses")
     , @NamedQuery(name = "Analyses.findByItem", query = "SELECT a FROM Analyses a WHERE a.item = :item")
     , @NamedQuery(name = "Analyses.findByValeur", query = "SELECT a FROM Analyses a WHERE a.valeur = :valeur")
-    , @NamedQuery(name = "Analyses.findByDemande", query = "SELECT a FROM Analyses a WHERE a.demande = :demande")
+    , @NamedQuery(name = "Analyses.findByIdDemande", query = "SELECT a FROM Analyses a WHERE a.idDemande = :idDemande")
 })
 public class Analyses implements Serializable
 {
@@ -50,9 +50,9 @@ public class Analyses implements Serializable
     @Size(max = 45)
     @Column(name = "Valeur")
     private String valeur;
-    @JoinColumn(name = "Demande", referencedColumnName = "idDemande")
+    @JoinColumn(name = "idDemande", referencedColumnName = "idDemande")
     @ManyToOne(optional = false)
-    private Demande demande;
+    private Demande idDemande;
 
     public Analyses()
     {
@@ -93,14 +93,14 @@ public class Analyses implements Serializable
         this.valeur = valeur;
     }
 
-    public Demande getDemande()
+    public Demande getIdDemande()
     {
-        return demande;
+        return idDemande;
     }
 
-    public void setDemande(Demande demande)
+    public void setIdDemande(Demande idDemande)
     {
-        this.demande = demande;
+        this.idDemande = idDemande;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class Analyses implements Serializable
     @Override
     public String toString()
     {
-        return "entities.Analyses[ idAnalyses=" + idAnalyses + " ]";
+        return this.getItem() + " \t " + this.getValeur();
     }
     
 }
