@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is JAX-WS RI 2.2.9-b130926.1035 svn-revision#5f6196f2b90e9460065a4c2f4e30e065b245e51e. --><xs:schema xmlns:tns="http://ws/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws/">
+
+<xs:element name="analyses" type="tns:analyses"></xs:element>
+
+<xs:element name="demande" type="tns:demande"></xs:element>
+
+<xs:element name="getResultats" type="tns:getResultats"></xs:element>
+
+<xs:element name="getResultatsResponse" type="tns:getResultatsResponse"></xs:element>
+
+<xs:element name="medecin" type="tns:medecin"></xs:element>
+
+<xs:element name="patient" type="tns:patient"></xs:element>
+
+<xs:complexType name="getResultats">
+<xs:sequence>
+<xs:element name="arg0" type="xs:int"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getResultatsResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:analyses" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="analyses">
+<xs:sequence>
+<xs:element name="demande" type="tns:demande" minOccurs="0"></xs:element>
+<xs:element name="idAnalyses" type="xs:int" minOccurs="0"></xs:element>
+<xs:element name="item" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="valeur" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="demande">
+<xs:sequence>
+<xs:element name="dateHeureDemande" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="idDemande" type="xs:int" minOccurs="0"></xs:element>
+<xs:element name="refMedecin" type="tns:medecin" minOccurs="0"></xs:element>
+<xs:element name="refPatient" type="tns:patient" minOccurs="0"></xs:element>
+<xs:element name="resultatsDisponibles" type="xs:boolean" minOccurs="0"></xs:element>
+<xs:element name="urgent" type="xs:boolean" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="medecin">
+<xs:sequence>
+<xs:element name="idMedecin" type="xs:int" minOccurs="0"></xs:element>
+<xs:element name="login" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="nom" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="prenom" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="patient">
+<xs:sequence>
+<xs:element name="idPatient" type="xs:int" minOccurs="0"></xs:element>
+<xs:element name="login" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="nom" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="prenom" type="xs:string" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>

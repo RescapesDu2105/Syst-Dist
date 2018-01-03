@@ -5,6 +5,8 @@
  */
 package applicationpatient;
 
+import java.awt.Desktop;
+import java.net.URI;
 import ws.Analyses;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -34,6 +36,7 @@ public class AfficherAnalysesFrame extends javax.swing.JFrame
             obj[1] = a.getValeur();
             dtm.addRow(obj);
         });
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -98,6 +101,13 @@ public class AfficherAnalysesFrame extends javax.swing.JFrame
         jLabel.setText("jLabel1");
 
         jButton_Payer.setText("Payer");
+        jButton_Payer.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton_PayerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -141,6 +151,22 @@ public class AfficherAnalysesFrame extends javax.swing.JFrame
     {//GEN-HEADEREND:event_jButton_FermerActionPerformed
         this.dispose();
     }//GEN-LAST:event_jButton_FermerActionPerformed
+
+    private void jButton_PayerActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton_PayerActionPerformed
+    {//GEN-HEADEREND:event_jButton_PayerActionPerformed
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) 
+        {https://www.sandbox.paypal.com/checkoutnow?version=4&locale.x=en_US&fundingSource=paypal&sessionID=16c52044ee_gazdumjzhiydk&buttonSessionID=2e32de1911_gazdumrshiydi&env=sandbox&logLevel=warn&uid=d61728b2fa&token=PAY-45431966UG5534434LJGD5LI&xcomponent=1#/checkout/login
+            try 
+            {
+                desktop.browse(URI.create("http://localhost:8084/WebApplication/index.jsp"));
+            } 
+            catch (Exception e) 
+            {
+                e.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_jButton_PayerActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_Fermer;

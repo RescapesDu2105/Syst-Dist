@@ -22,6 +22,7 @@ public class EntrerReferenceFrame extends javax.swing.JFrame
     public EntrerReferenceFrame()
     {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
