@@ -17,7 +17,9 @@ public class JavaApplicationWsSelfHosted
      */
     public static void main(String[] args)
     {
-        // TODO code application logic here
+        ws.WSTest_Service service  = new ws.WSTest_Service();
+        ws.WSTest port = service.getWSTestPort();
+        System.out.println("Appel : "+ port.hello("Tusset"));
     }
     
 }

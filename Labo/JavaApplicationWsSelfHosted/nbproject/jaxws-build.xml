@@ -16,22 +16,22 @@
             <classpath path="${libs.jaxws21.classpath}"/>
         </taskdef>
     </target>
-    <target name="wsimport-client-WSTest_Tester" depends="wsimport-init">
-        <mkdir dir="${build.generated.dir}/jax-wsCache/WSTest_Tester"/>
-        <property name="wsdl-WSTest_Tester" location="xml-resources/web-service-references/WSTest_Tester/wsdl/localhost_8080/WSTest/WSTest.tester"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WSTest_Tester" destdir="${build.generated.dir}/jax-wsCache/WSTest_Tester" wsdl="${wsdl-WSTest_Tester}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/WSTest/WSTest?Tester" xnocompile="true" xendorsed="true" package="ws">
-            <depends file="${wsdl-WSTest_Tester}"/>
-            <produces dir="${build.generated.dir}/jax-wsCache/WSTest_Tester"/>
+    <target name="wsimport-client-WSTest" depends="wsimport-init">
+        <mkdir dir="${build.generated.dir}/jax-wsCache/WSTest"/>
+        <property name="wsdl-WSTest" location="xml-resources/web-service-references/WSTest/wsdl/localhost_8080/WSTest/WSTest.wsdl"/>
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/WSTest" destdir="${build.generated.dir}/jax-wsCache/WSTest" wsdl="${wsdl-WSTest}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/WSTest/WSTest?wsdl" xnocompile="true" xendorsed="true" package="ws">
+            <depends file="${wsdl-WSTest}"/>
+            <produces dir="${build.generated.dir}/jax-wsCache/WSTest"/>
         </wsimport>
         <copy todir="${build.generated.sources.dir}/jax-ws">
-            <fileset dir="${build.generated.dir}/jax-wsCache/WSTest_Tester">
+            <fileset dir="${build.generated.dir}/jax-wsCache/WSTest">
                 <include name="**/*.java"/>
             </fileset>
         </copy>
     </target>
-    <target name="wsimport-client-clean-WSTest_Tester" depends="-init-project">
-        <delete dir="${build.generated.dir}/jax-wsCache/WSTest_Tester"/>
+    <target name="wsimport-client-clean-WSTest" depends="-init-project">
+        <delete dir="${build.generated.dir}/jax-wsCache/WSTest"/>
         <delete dir="${build.generated.sources.dir}/jax-ws/ws"/>
     </target>
-    <target name="wsimport-client-generate" depends="wsimport-client-WSTest_Tester"/>
+    <target name="wsimport-client-generate" depends="wsimport-client-WSTest"/>
 </project>

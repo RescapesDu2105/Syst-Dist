@@ -2,9 +2,9 @@
 <jax-ws xmlns="http://www.netbeans.org/ns/jax-ws/1">
   <services/>
   <clients>
-    <client name="WSTest_Tester">
-      <wsdl-url>http://localhost:8080/WSTest/WSTest?Tester</wsdl-url>
-      <local-wsdl-file>localhost_8080/WSTest/WSTest.tester</local-wsdl-file>
+    <client name="WSTest">
+      <wsdl-url>http://localhost:8080/WSTest/WSTest?wsdl</wsdl-url>
+      <local-wsdl-file>localhost_8080/WSTest/WSTest.wsdl</local-wsdl-file>
       <package-name forceReplace="true">ws</package-name>
       <catalog-file>catalog.xml</catalog-file>
       <wsimport-options>
@@ -22,7 +22,7 @@
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>wsdlLocation</wsimport-option-name>
-          <wsimport-option-value>http://localhost:8080/WSTest/WSTest?Tester</wsimport-option-value>
+          <wsimport-option-value>http://localhost:8080/WSTest/WSTest?wsdl</wsimport-option-value>
         </wsimport-option>
         <wsimport-option>
           <wsimport-option-name>xnocompile</wsimport-option-name>
