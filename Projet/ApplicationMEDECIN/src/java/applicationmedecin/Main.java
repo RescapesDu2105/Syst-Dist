@@ -21,6 +21,7 @@ import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -57,8 +58,7 @@ public class Main
             if(medecin == null)
             {
                 //Erreur
-                //JOptionPane.showMessageDialog(this, "Le nom d'utilisateur et/ou le mot de passe est incorrect !", "Erreur", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Erreur de login 1");
+                System.err.println("Authentification invalide !");
                 System.exit(1);
             }
             else
@@ -72,7 +72,7 @@ public class Main
         }
         catch (Exception ex) 
         {
-            System.err.println("Erreur de login 2");
+            System.err.println("Authentification invalide !");
             System.exit(1);
         }
     }    

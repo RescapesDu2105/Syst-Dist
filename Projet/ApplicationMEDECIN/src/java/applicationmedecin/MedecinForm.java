@@ -18,8 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -27,12 +25,9 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -45,7 +40,7 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
     @EJB
     private static SessionBeanPatientRemote EJBPatients;
     private final Medecin medecin;
-    private final Patient patient;
+    private Patient patient;
            
     private final HashMap<Demande, ArrayList<Analyses>> ResultatsUrgents;
     
@@ -206,7 +201,7 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
         jButton_Quitter.setEnabled(false);
         
         jPanel.removeAll();
-        jPanel.add(new ModifierPatientPanel(EJBPatients, this, jPanel, patient)); 
+        jPanel.add(new ModifierPatientPanel(EJBPatients, this)); 
         this.revalidate();
     }//GEN-LAST:event_jButton_ModifierActionPerformed
 
@@ -295,6 +290,30 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
         }
     }
 
+    public Medecin getMedecin()
+    {
+        return medecin;
+    }
+
+    public void setPatient(Patient patient)
+    {
+        this.patient = patient;
+    }    
+    public Patient getPatient()
+    {
+        return patient;
+    }
+
+    public HashMap<Demande, ArrayList<Analyses>> getResultatsUrgents()
+    {
+        return ResultatsUrgents;
+    }
+
+    public JPanel getjPanel()
+    {
+        return jPanel;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton jButton_Consulter;
     public javax.swing.JButton jButton_Modifier;

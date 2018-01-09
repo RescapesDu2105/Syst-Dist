@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
 import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.Topic;
@@ -43,8 +44,7 @@ public class Main
 
             if(principal == null)
             {
-                //JOptionPane.showMessageDialog(this, "Le nom d'utilisateur et/ou le mot de passe est incorrect !", "Erreur", JOptionPane.ERROR_MESSAGE);
-                System.err.println("Erreur de login");
+                System.err.println("Authentification invalide !");
                 System.exit(1);
             }
             else        
@@ -56,8 +56,15 @@ public class Main
                 new LaborantinFrame(EJBAnalyses, myQueue, connectionQueue, sessionQueue).setVisible(true);
             }
         }
+        catch (JMSException ex) 
+        {        
+            ex.printStackTrace();
+            System.exit(1);
+        }
         catch (Exception ex) 
         {
+            System.err.println("Authentification invalide !");
+            
             ex.printStackTrace();
             System.exit(1);
         }
