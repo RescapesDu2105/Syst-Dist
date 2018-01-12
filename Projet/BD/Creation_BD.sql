@@ -41,12 +41,13 @@ CREATE TABLE `bd_systdist`.`analyses` (
 
 CREATE TABLE `bd_systdist`.`logs` (
   `idLogs` INT NOT NULL AUTO_INCREMENT,
-  `Infos` VARCHAR(45) NULL,
+  `Infos` VARCHAR(55) NULL,
   PRIMARY KEY (`idLogs`));
 
 
 INSERT INTO bd_systdist.medecin(idMedecin, Nom, Prenom, Login) VALUES('1', 'Dimartino', 'Philippe', 'philippedimartino');
+INSERT INTO bd_systdist.medecin(idMedecin, Nom, Prenom, Login) VALUES('2', 'Fourgon', 'Maxime', 'maximefourgon');
 
-INSERT INTO bd_systdist.patient(idPatient, Nom, Prenom, Login) VALUES('1', 'Serrhini', 'Souad', 'sousou');
+/* INSERT INTO bd_systdist.patient(idPatient, Nom, Prenom, Login) VALUES('1', 'Serrhini', 'Souad', 'sousou'); */
 
 COMMIT;

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE glassfish-ejb-jar PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 EJB 3.1//EN" "http://glassfish.org/dtds/glassfish-ejb-jar_3_1-1.dtd%22%3E">
+<glassfish-ejb-jar>
+    <security-role-mapping>
+        <role-name>Medecin</role-name>
+        <principal-name>philippedimartino</principal-name>
+        <group-name>Medecins</group-name>
+    </security-role-mapping>
+    <security-role-mapping>
+        <role-name>Laborantin</role-name>
+        <principal-name>tussetquentin</principal-name>
+        <group-name>Laborantins</group-name>
+    </security-role-mapping>
+    <entreprise-beans/>
+</glassfish-ejb-jar>

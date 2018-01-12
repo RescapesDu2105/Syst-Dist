@@ -280,7 +280,7 @@ public class MedecinForm extends javax.swing.JFrame implements MessageListener
                     ObjectMessage om = (ObjectMessage) message;
 
                     Demande d = (Demande) om.getObject();
-                    ResultatsUrgents.put(d, EJBAnalyses.getAnalysesByDemande(d));
+                    ResultatsUrgents.put(d, EJBAnalyses.getAnalysesByDemande(d));                    
                 }
             } 
             catch (JMSException ex) 
